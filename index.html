@@ -229,6 +229,7 @@
         <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
     </div>
 
+    <!-- UNIVERSAL CUSTOM ALERT MODAL -->
     <div id="custom-alert-modal" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
         <div class="liquid-panel anim-pop" style="text-align:center;">
             <h2 id="custom-alert-title" style="margin-top:0; color: #fff; font-size: 1.6em; font-weight:800;">Hinweis</h2>
@@ -237,6 +238,7 @@
         </div>
     </div>
 
+    <!-- UNIVERSAL CUSTOM CONFIRM MODAL -->
     <div id="custom-confirm-modal" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); z-index:9998; justify-content:center; align-items:center; padding:20px;">
         <div class="liquid-panel anim-pop" style="text-align:center;">
             <h2 id="custom-confirm-title" style="margin-top:0; color: #fff; font-size: 1.6em; font-weight:800;">Bist du sicher?</h2>
@@ -246,6 +248,20 @@
         </div>
     </div>
 
+    <!-- OVERLAY FÜR WEBUNTIS SCREENSHOT -->
+    <div id="untis-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); z-index:9500; justify-content:center; align-items:center; padding:10px;">
+        <div class="liquid-panel anim-pop" style="max-width: 95vw; max-height: 90vh; display: flex; flex-direction: column; align-items: center; padding: 20px;">
+            <h2 style="margin-top:0; color: #c4b5fd; font-weight:800; font-size: 1.8em;">WebUntis</h2>
+            
+            <div style="overflow: auto; max-height: 65vh; width: 100%; border-radius: 12px; margin-bottom: 20px; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); background: #000;">
+                <img id="untis-image-display" src="" alt="Stundenplan" style="width: 100%; height: auto; display: block;">
+            </div>
+            
+            <button class="btn btn-secondary" onclick="document.getElementById('untis-modal-overlay').style.display='none'">Schließen</button>
+        </div>
+    </div>
+
+    <!-- HINTERGRUND EINSTELLUNGEN MODAL -->
     <div id="bg-settings-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); z-index:8500; justify-content:center; align-items:center; padding:20px;">
         <div class="liquid-panel anim-pop" style="text-align:center;">
             <h2 style="margin-top:0; color: #fff; font-weight:800;">Hintergrund</h2>
@@ -270,6 +286,7 @@
         </div>
     </div>
 
+    <!-- HOTSPOT STEALTH MODAL -->
     <div id="hotspot-stealth-modal" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); z-index:8000; justify-content:center; align-items:center; padding:20px;">
         <div class="liquid-panel anim-pop" style="text-align:center;">
             <h2 style="margin-top:0; color: #fff; font-weight:800;">Netzwerk Menü</h2>
@@ -281,6 +298,7 @@
         </div>
     </div>
 
+    <!-- OVERLAY FÜR GPS ABFRAGE -->
     <div id="gps-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); z-index:1000; justify-content:center; align-items:center; padding:20px;">
         <div class="liquid-panel anim-pop" style="text-align:center;">
             <h2 style="margin-top:0; color: #fff; font-weight:800;">Standort mitsenden?</h2>
@@ -291,6 +309,7 @@
         </div>
     </div>
 
+    <!-- OVERLAY FÜR GERÄT HINZUFÜGEN -->
     <div id="add-device-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); z-index:2000; justify-content:center; align-items:center; padding:20px;">
         <div class="liquid-panel anim-pop" style="text-align:center;">
             <h2 style="margin-top:0; color: #fff; font-size: 1.8em; font-weight:800;">Gerät verbinden</h2>
@@ -307,6 +326,7 @@
         </div>
     </div>
 
+    <!-- OVERLAY FÜR GERÄT LÖSCHEN -->
     <div id="delete-device-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); z-index:3000; justify-content:center; align-items:center; padding:20px;">
         <div class="liquid-panel anim-pop" style="text-align:center;">
             <h2 style="margin-top:0; color: #fff; font-size: 1.6em; font-weight:800;">Gerät entfernen?</h2>
@@ -316,6 +336,7 @@
         </div>
     </div>
 
+    <!-- OVERLAY FÜR PIN FESTLEGEN -->
     <div id="set-pin-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); z-index:2000; justify-content:center; align-items:center; padding:20px;">
         <div class="liquid-panel anim-pop" style="text-align:center;">
             <h2 style="margin-top:0; color: #fff; font-size: 1.8em; font-weight:800;">PIN festlegen</h2>
@@ -332,8 +353,10 @@
         </div>
     </div>
 
+    <!-- ADMIN AUTHENTIFIZIERUNG MODAL -->
     <div id="admin-auth-modal" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); -webkit-backdrop-filter:blur(30px); z-index:9000; justify-content:center; align-items:center; padding:20px;">
         <div class="liquid-panel anim-pop" style="text-align:center;">
+            <!-- X Button nur um Auth-Fenster zu schließen -->
             <div class="admin-close-btn" onclick="document.getElementById('admin-auth-modal').style.display='none'">✖</div>
             
             <h2 style="margin-top:0; color: #fff; font-weight:800; display:flex; justify-content:center; align-items:center;">
@@ -373,13 +396,16 @@
         </div>
     </div>
 
+    <!-- ADMIN MENÜ MODAL -->
     <div id="admin-menu-modal" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(40px); -webkit-backdrop-filter:blur(40px); z-index:9100; justify-content:center; align-items:center; padding:20px;">
         <div class="liquid-panel anim-pop" style="text-align:center; max-height:90vh; overflow-y:auto; max-width: 500px;">
             
+            <!-- BACK BUTTON (Versteckt Menü, lässt Zustand unlocked) -->
             <div class="admin-back-btn" onclick="hideAdminMenu()" title="Menü verbergen (Bleibt entsperrt)">
                 <svg class="svg-icon" style="margin:0; width:20px; height:20px;" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
             </div>
             
+            <!-- CLOSE/LOCK BUTTON (Sperrt das Menü wieder) -->
             <div class="admin-close-btn" onclick="lockAdminMenu()" title="Sitzung beenden & Sperren">✖</div>
 
             <h2 style="margin-top:0; color: #fff; font-weight:800; font-size: 2em; letter-spacing: 1px; text-shadow: 0 0 20px rgba(239,68,68,0.5);">
@@ -406,6 +432,7 @@
         </div>
     </div>
 
+    <!-- HAUPT APP CONTAINER -->
     <div id="app-container" class="liquid-panel anim-pop">
         
         <div id="loading-screen" class="view-section active" style="text-align:center; padding:40px 0;">
@@ -413,6 +440,7 @@
             <p style="color: rgba(255,255,255,0.8); letter-spacing: 1px; font-weight:600; animation: pulseRGB 2s infinite;">Verifiziere System...</p>
         </div>
 
+        <!-- REGISTRIERUNGS-BEREICH (UNVERIFIED) -->
         <div id="register-screen" class="view-section">
             <h1 style="font-size: 1.8em; margin-bottom: 5px; background: none; color: #fca5a5; -webkit-text-fill-color: #fca5a5; text-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);">Zugriff verweigert</h1>
             <p style="text-align: center; color: rgba(255,255,255,0.6); font-size: 0.9em; margin-bottom: 25px;">Dein Gerät ist nicht verifiziert.</p>
@@ -468,6 +496,7 @@
             </div>
         </div>
 
+        <!-- HAUPTMENÜ (VERIFIED) -->
         <div id="main-screen" class="view-section anim-pop">
             <h1>KL Files</h1>
             <p id="greeting-text"></p>
@@ -476,6 +505,13 @@
                 <div class="menu-col">
                     <div class="category-title">System & Bildung</div>
                     <button class="btn btn-menu" onclick="window.open('https://stundenplan-public.tiiny.site/', '_blank')"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Stundenplan</button>
+                    
+                    <!-- NEU: WebUntis Button (Unsichtbar by default) -->
+                    <button class="btn btn-menu" id="webuntis-btn" style="display: none; border-color: rgba(139, 92, 246, 0.4); color: #c4b5fd;" onclick="fetchWebUntis(this)">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        WebUntis (Marco)
+                    </button>
+
                     <button class="btn btn-menu" onclick="openTaskcards()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Taskcards</button>
                     <button class="btn btn-menu" onclick="window.open('https://kleinlauch.wordpress.com/archiv/', '_blank')"><svg class="svg-icon" viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>Archiv</button>
 
@@ -503,6 +539,7 @@
             </div>
         </div>
 
+        <!-- VERBUNDENE GERÄTE SCREEN -->
         <div id="connected-devices-screen" class="view-section anim-pop">
             <h1 style="font-size: 2.2em;">Geräte</h1>
             <p style="text-align:center; color:rgba(255,255,255,0.6); font-size:0.95em; margin-bottom:25px;">Remote-Logins verwalten</p>
@@ -514,9 +551,15 @@
 
     </div>
 
-    <div class="version-number">v4.1.0 (Admin Lock Fix) + Progress Bars</div>
+    <div class="version-number">v4.2.0 (Untis & JSON Fixes)</div>
 
+    <!-- JAVASCRIPT START -->
     <script>
+        // --- RECHTSKLICK-SPERRE (Ganze Webseite) ---
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+        });
+
         document.addEventListener("visibilitychange", () => { 
             document.title = document.hidden ? "Komm zurück!" : "KL Files WEB"; 
         });
@@ -626,29 +669,37 @@
             return response;
         }
 
-        // --- PUSHCUT API REQUESTS (Repariert für Input via URL) ---
+        // --- PUSHCUT API REQUESTS (Repariert: Sauberes JSON ohne no-cors Blockade) ---
 
-        // Standard-Befehle, bei denen wir nicht auf eine Antwort warten (Sicher via URL Parameter)
         async function triggerPushcut(sc, p) { 
-            const url = `${pushcutBaseUrl}${encodeURIComponent(sc)}` + (p ? `&input=${encodeURIComponent(p)}` : "");
-            await fetch(url, { mode: 'no-cors' }); 
+            await fetch(`${pushcutBaseUrl}${encodeURIComponent(sc)}`, { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ input: p || "" })
+            }); 
         }
 
-        // Befehle, bei denen wir auf eine Antwort warten (Sicher via URL Parameter)
         async function triggerPushcutWait(sc, p) { 
-            const url = `${pushcutBaseUrl}${encodeURIComponent(sc)}` + (p ? `&input=${encodeURIComponent(p)}` : "");
-            const r = await fetch(url); 
+            const r = await fetch(`${pushcutBaseUrl}${encodeURIComponent(sc)}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ input: p || "" })
+            }); 
             if (!r.ok) throw new Error("Server Request Failed"); 
-            return await r.text();
+            return await r.text(); 
         }
 
-        // Für Shortcut-Buttons ohne Input
         async function triggerSimplePushcut(scName) {
             showCustomAlert(`Befehl '${scName}' gesendet!`, "System");
-            try { await fetch(`${pushcutBaseUrl}${encodeURIComponent(scName)}`, { mode: 'no-cors' }); } catch(e){}
+            try { 
+                await fetch(`${pushcutBaseUrl}${encodeURIComponent(scName)}`, { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ input: "" })
+                }); 
+            } catch(e){}
         }
 
-        // EXTRALORD-Funktion NUR für riesige Datenmengen wie Bilder, die nicht in die URL passen (ohne no-cors!)
         async function triggerPushcutLarge(sc, p) {
             await fetch(`${pushcutBaseUrl}${encodeURIComponent(sc)}`, { 
                 method: 'POST',
@@ -724,7 +775,6 @@
             applyUserBackground(currentSessionName);
             
             try {
-                // HIER WIRD DIE GROSSE FUNKTION VERWENDET WEGEN BILD-DATEN
                 await triggerPushcutLarge("KLF-WEB-SetBG", `${currentSessionName};${bgData}`);
                 if(pState) stopBtnProgress(btn, pState);
                 closeBgModal();
@@ -927,7 +977,20 @@
             if (screenId === "main-screen") {
                 document.getElementById("greeting-text").innerText = getGreeting(currentSessionName);
                 document.getElementById("app-container").classList.add("wide-panel");
-            } else { document.getElementById("app-container").classList.remove("wide-panel"); }
+                
+                // --- NEU: MARCO M. WEBUNTIS CHECK ---
+                let untisBtn = document.getElementById("webuntis-btn");
+                if (untisBtn) {
+                    if (currentSessionName === "Marco M." || currentSessionName === "Admin") {
+                        untisBtn.style.display = "flex"; 
+                    } else {
+                        untisBtn.style.display = "none"; 
+                    }
+                }
+                
+            } else { 
+                document.getElementById("app-container").classList.remove("wide-panel"); 
+            }
             
             target.classList.add('active');
             if(screenId === "connected-devices-screen") loadConnectedDevices();
@@ -944,6 +1007,30 @@
         function openTaskcards() {
             navigator.clipboard.writeText("20252026").catch(e=>{}); 
             window.open('https://kmz-rt.taskcards.app/#/board/6098d954-46bf-442b-a1bd-5c7499e167e0/view?token=98e32cdc-37c1-4c9f-8e42-f1efaedb5150', '_blank');
+        }
+
+        // --- WEBUNTIS FUNKTION ---
+        async function fetchWebUntis(btn) {
+            let pState = startBtnProgress(btn, 6500, "Lade Untis..."); 
+            try {
+                let base64Image = await triggerPushcutWait("getUntis", currentSessionName);
+                stopBtnProgress(btn, pState);
+                
+                if (base64Image && base64Image.trim() !== "") {
+                    let cleanBase64 = base64Image.trim();
+                    if (!cleanBase64.startsWith("data:image")) {
+                        cleanBase64 = "data:image/png;base64," + cleanBase64;
+                    }
+                    
+                    document.getElementById("untis-image-display").src = cleanBase64;
+                    document.getElementById("untis-modal-overlay").style.display = "flex";
+                } else {
+                    showCustomAlert("Der Server hat ein leeres Bild zurückgeschickt.", "Untis Fehler");
+                }
+            } catch(e) {
+                stopBtnProgress(btn, pState);
+                showCustomAlert("Fehler beim Abrufen des Stundenplans vom Server.", "Verbindungsfehler");
+            }
         }
 
         async function showHotspotPassword(btn) {
