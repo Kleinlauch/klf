@@ -28,30 +28,41 @@
         @keyframes float3 { to { transform: translate(10vw, -15vh) scale(1.2); } }
 
         /* --- THEME ENGINE --- */
-        body.theme-wlg, body.theme-min, body.theme-wp { color: #1a1a1a; }
+        /* Helle Themes (WLG, MIN, WP, CLASSIC) Font-Colors & Basics */
+        body.theme-wlg, body.theme-min, body.theme-wp, body.theme-classic { color: #1a1a1a; }
         body.theme-wlg h1, body.theme-min h1, body.theme-wp h1 { background: none; -webkit-text-fill-color: #111; text-shadow: none; }
         body.theme-wlg #greeting-text, body.theme-min #greeting-text, body.theme-wp #greeting-text { color: #444; text-shadow: none; }
         body.theme-wlg .category-title, body.theme-min .category-title, body.theme-wp .category-title { color: #666; text-shadow: none; }
         body.theme-wlg .btn, body.theme-min .btn, body.theme-wp .btn { color: #111; text-shadow: none; }
         body.theme-wlg .svg-icon, body.theme-min .svg-icon, body.theme-wp .svg-icon { color: #111; }
-        body.theme-wlg .info-box, body.theme-min .info-box, body.theme-wp .info-box { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); color: #333; box-shadow: none; }
-        body.theme-wlg .custom-text-input, body.theme-min .custom-text-input, body.theme-wp .custom-text-input { background: rgba(255,255,255,0.8); border: 1px solid #ccc; color: #000; box-shadow: none; }
+        body.theme-wlg .info-box, body.theme-min .info-box, body.theme-wp .info-box, body.theme-classic .info-box { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); color: #333; box-shadow: none; }
+        body.theme-wlg .custom-text-input, body.theme-min .custom-text-input, body.theme-wp .custom-text-input, body.theme-classic .custom-text-input { background: rgba(255,255,255,0.8); border: 1px solid #ccc; color: #000; box-shadow: none; }
 
+        /* Button Overrides für helle Themes */
+        body.theme-wlg .btn-secondary, body.theme-min .btn-secondary, body.theme-wp .btn-secondary, body.theme-classic .btn-secondary { background: rgba(0,0,0,0.05); color: #333; border-color: rgba(0,0,0,0.2); box-shadow:none; }
+        body.theme-wlg .btn-secondary:hover, body.theme-min .btn-secondary:hover, body.theme-wp .btn-secondary:hover, body.theme-classic .btn-secondary:hover { background: rgba(0,0,0,0.1); }
+        body.theme-wlg .btn-del, body.theme-min .btn-del, body.theme-wp .btn-del, body.theme-classic .btn-del { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.3); }
+        body.theme-wlg .btn-del-modal, body.theme-min .btn-del-modal, body.theme-wp .btn-del-modal, body.theme-classic .btn-del-modal { background: #ef4444; color: #fff; box-shadow:none; text-shadow:none; border:none; }
+        
+        /* White Liquid Glass */
         body.theme-wlg .liquid-panel { background: rgba(255,255,255,0.85); box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); }
         body.theme-wlg .btn-menu { background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         body.theme-wlg .btn-menu:hover { background: rgba(255,255,255,0.9); }
         body.theme-wlg .btn-pulse { background: rgba(255,255,255,0.8); color: #000; border: 1px solid #ccc; }
 
+        /* Dark Liquid Glass */
         body.theme-dlg .liquid-panel { background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.9); }
         body.theme-dlg .btn-menu { background: rgba(40,40,40,0.6); border: 1px solid rgba(255,255,255,0.08); }
         body.theme-dlg .btn-menu:hover { background: rgba(60,60,60,0.8); }
 
+        /* OLED Liquid Glass */
         body.theme-olg, body.theme-olg .ambient-bg { background-color: #000; }
         body.theme-olg .liquid-panel { background: #000; border: 1px solid #222; box-shadow: none; backdrop-filter: none; }
         body.theme-olg .btn-menu { background: #0a0a0a; border: 1px solid #1a1a1a; box-shadow: none; }
         body.theme-olg .btn-menu:hover { background: #111; border-color: #333; }
         body.theme-olg .ambient-bg { opacity: 0 !important; }
 
+        /* Minimalistic */
         body.theme-min .liquid-panel { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border: 1px solid #e5e7eb; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         body.theme-min .btn-menu { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none; }
         body.theme-min .btn-menu:hover { background: #f3f4f6; border-color: #d1d5db; transform: translateY(-2px); }
@@ -59,6 +70,7 @@
         body.theme-min .btn-pulse::before { display: none; }
         body.theme-min .ambient-bg { opacity: 0.1 !important; }
 
+        /* WordPress Style */
         body.theme-wp { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; background-color: #f0f0f1; }
         body.theme-wp .liquid-panel { background: #fff; backdrop-filter: none; border: 1px solid #c3c4c7; border-radius: 2px; box-shadow: 0 1px 1px rgba(0,0,0,0.04); }
         body.theme-wp .btn-menu { background: #f6f7f7; border: 1px solid #2271b1; border-radius: 3px; color: #2271b1; box-shadow: none; justify-content: center; }
@@ -68,9 +80,55 @@
         body.theme-wp .btn-pulse::before { display: none; }
         body.theme-wp .ambient-bg { opacity: 0 !important; }
 
-        body.theme-classic .liquid-panel { background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 49%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0.3) 100%); border: 1px solid rgba(255,255,255,0.6); border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.8); backdrop-filter: blur(12px); }
-        body.theme-classic .btn-menu { background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.05) 49%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.2) 100%); border: 1px solid rgba(0,0,0,0.4); border-radius: 4px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.4); text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
-        body.theme-classic .btn-menu:hover { background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 49%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.1) 100%); transform: none; }
+        /* Windows 7 Classic Aero */
+        body.theme-classic .liquid-panel { background: linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 40%, rgba(200,200,200,0.1) 41%, rgba(200,200,200,0.3) 100%); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.8), inset 0 0 10px rgba(255,255,255,0.4); color: #111; }
+        body.theme-classic h1 { background: none; -webkit-text-fill-color: #000; text-shadow: 0 0 10px #fff; }
+        body.theme-classic #greeting-text { color: #111; text-shadow: 0 0 5px #fff; font-weight: bold; }
+        body.theme-classic .category-title { color: #222; text-shadow: 0 0 5px #fff; }
+        body.theme-classic .btn-menu { background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(240,240,240,0.8) 49%, rgba(210,210,210,0.8) 50%, rgba(230,230,230,0.9) 100%); border: 1px solid #777; border-radius: 4px; color: #000; text-shadow: 0 1px 0 #fff; box-shadow: inset 0 1px 1px rgba(255,255,255,1), 0 2px 3px rgba(0,0,0,0.1); }
+        body.theme-classic .btn-menu:hover { background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(220,240,255,0.9) 49%, rgba(180,220,255,0.9) 50%, rgba(200,240,255,1) 100%); border-color: #2b79d6; box-shadow: inset 0 1px 1px rgba(255,255,255,1), 0 0 8px rgba(43,121,214,0.7); transform: none; }
+        body.theme-classic .btn-pulse { background: linear-gradient(180deg, #519df7 0%, #2b79d6 49%, #155bb3 50%, #206ed1 100%); border: 1px solid #11427c; border-radius: 4px; color: #fff; box-shadow: inset 0 1px 1px rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.3); text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+        body.theme-classic .btn-pulse::before { display: none; }
+        body.theme-classic .svg-icon { color: #2b79d6; }
+        body.theme-classic .btn-pulse .svg-icon { color: #fff; }
+
+        /* AMG Theme MBUX Style */
+        body.theme-amg { background-color: #050505; color: #fff; font-family: "Eurostile", "Microgramma", -apple-system, sans-serif; }
+        body.theme-amg .liquid-panel { background: linear-gradient(145deg, #0f0f0f, #1a1a1a); border: 1px solid #333; border-top: 1px solid #444; box-shadow: 0 15px 40px rgba(255, 0, 0, 0.08), inset 0 1px 1px rgba(255,255,255,0.05); border-radius: 16px; }
+        body.theme-amg h1 { background: none; -webkit-text-fill-color: #fff; text-shadow: 0 0 15px rgba(255,255,255,0.2); font-style: italic; letter-spacing: 2px; }
+        body.theme-amg .category-title { color: #ff0000; letter-spacing: 4px; border-bottom: 1px solid rgba(255,0,0,0.3); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; }
+        body.theme-amg .btn-menu { background: #111; border: 1px solid #222; border-left: 4px solid #ff0000; border-radius: 6px; box-shadow: 3px 3px 10px rgba(0,0,0,0.6); color: #eaeaea; font-weight: normal; letter-spacing: 1px; }
+        body.theme-amg .btn-menu:hover { background: #1a1a1a; border-color: #444; border-left-color: #ff3333; box-shadow: 0 0 20px rgba(255,0,0,0.2); transform: translateX(4px); }
+        body.theme-amg .btn-pulse { background: linear-gradient(135deg, #cc0000, #990000); color: #fff; border: 1px solid #ff3333; box-shadow: 0 5px 20px rgba(204,0,0,0.4); border-radius: 6px; letter-spacing: 1px; font-weight: bold; }
+        body.theme-amg .btn-pulse::before { display: none; }
+        body.theme-amg .svg-icon { color: #ff0000; }
+        body.theme-amg .btn-pulse .svg-icon { color: #fff; }
+        body.theme-amg .btn-secondary { background: #111; border: 1px solid #333; color: #aaa; border-radius: 6px; }
+        body.theme-amg .btn-secondary:hover { background: #222; border-color: #555; color: #fff; }
+        body.theme-amg .info-box { background: rgba(255,0,0,0.05); border-color: rgba(255,0,0,0.2); }
+        
+        #amg-ui-logo { display: none; margin: 0 auto 25px auto; width: 150px; filter: invert(1); opacity: 0.8; }
+        body.theme-amg #amg-ui-logo { display: block; }
+
+        /* AMG Intro Animation Elements */
+        #amg-intro-overlay { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+        #amg-intro-overlay.active { opacity: 1; pointer-events: all; }
+        #amg-intro-star { width: 140px; opacity: 0; transform: scale(0.5); mix-blend-mode: screen; }
+        #amg-intro-logo { width: 220px; opacity: 0; margin-top: 30px; filter: invert(1); transform: translateY(20px); }
+        
+        .amg-anim-star { animation: amgStarAnim 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .amg-anim-logo { animation: amgLogoAnim 1.5s 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        
+        @keyframes amgStarAnim {
+            0% { opacity: 0; transform: scale(0.3) translateY(0); }
+            30% { opacity: 1; transform: scale(1.1) translateY(0); }
+            50% { opacity: 1; transform: scale(1) translateY(0); }
+            100% { opacity: 1; transform: scale(0.85) translateY(-50px); }
+        }
+        @keyframes amgLogoAnim {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
 
         /* --- ANIMATIONS --- */
         .anim-pop { animation: popIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards; }
@@ -88,7 +146,7 @@
         .liquid-panel::-webkit-scrollbar { display: none; width: 0px; background: transparent; }
         .liquid-panel { -ms-overflow-style: none; scrollbar-width: none; }
         h1 { text-align: center; margin-top: 0; margin-bottom: 5px; font-size: 2.5em; background: linear-gradient(to bottom right, #fff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; letter-spacing: -1px; text-shadow: 0 4px 20px rgba(255,255,255,0.2); transition: color 0.5s ease; }
-        #greeting-text { text-align: center; color: rgba(255,255,255,0.8); font-size: 1.1em; margin-top: 0; margin-bottom: 30px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        #greeting-text { text-align: center; color: rgba(255,255,255,0.8); font-size: 1.1em; margin-top: 0; margin-bottom: 25px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
         .svg-icon { width: 22px; height: 22px; stroke-width: 1.7px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; margin-right: 14px; opacity: 0.8; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); flex-shrink: 0; }
 
         /* --- BUTTONS --- */
@@ -161,6 +219,12 @@
 
     <div class="ambient-bg" id="ambient-layer">
         <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+    </div>
+
+    <!-- AMG INTRO ANIMATION OVERLAY -->
+    <div id="amg-intro-overlay">
+        <img id="amg-intro-star" src="https://storage.googleapis.com/chat-image-bucket/ed126742-f8ab-40da-834c-68e378c2e645.jpeg" alt="Mercedes Star">
+        <img id="amg-intro-logo" src="https://storage.googleapis.com/chat-image-bucket/c5cc969e-5b12-4217-af5e-39828dcd9916.png" alt="AMG Logo">
     </div>
 
     <!-- GÄSTE NOTIFICATION BANNER -->
@@ -269,7 +333,8 @@
                 <option value="OLG">OLED Black Liquid Glass</option>
                 <option value="MIN">Minimalistic</option>
                 <option value="WP">WordPress Style</option>
-                <option value="CLASSIC">Classic AeroGlass</option>
+                <option value="CLASSIC">Classic Aero (Windows 7)</option>
+                <option value="AMG">AMG MBUX</option>
             </select>
 
             <button class="btn btn-menu" onclick="document.getElementById('settings-modal-overlay').style.display='none'; document.getElementById('bg-settings-modal-overlay').style.display='flex';"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>Eigenes Hintergrundbild...</button>
@@ -464,6 +529,7 @@
         <div id="main-screen" class="view-section anim-pop">
             <h1>KL Files</h1>
             <p id="greeting-text"></p>
+            <img id="amg-ui-logo" src="https://storage.googleapis.com/chat-image-bucket/c5cc969e-5b12-4217-af5e-39828dcd9916.png" alt="AMG">
             
             <div class="menu-grid">
                 <div class="menu-col">
@@ -525,7 +591,7 @@
 
     </div>
 
-    <div class="version-number">v6.2.0 (Client-Side Theme Sync)</div>
+    <div class="version-number">v6.3.0 (Client-Side Sync + AMG Theme)</div>
 
     <!-- JAVASCRIPT START -->
     <script>
@@ -540,6 +606,7 @@
         const scHotspot="KLF-WEB-Hotspot", scAddDevice="KLF-WEB-Register", scDelDevice="KLF-WEB-Delete", scSetPin="KLF-WEB-SETPIN", scLogin="KLF-WEB-Login", scHotspotPass="KLF-WEB-HotspotPass";
         
         let currentSessionName = ""; let currentHotspotPerm = "0"; let currentTheme = "LG"; let currentDeviceToDelete = null; let currentIphoneKey = ""; let isAdminUnlocked = false; 
+        let hasPlayedAmgIntro = false;
 
         window.onerror = function(msg, url, lineNo, columnNo, error) { let loadScreen = document.getElementById("loading-screen"); if (loadScreen) { loadScreen.innerHTML = `<div class='info-box error-box'>Systemfehler: ${msg}<br>Bitte Admin informieren.</div><button class='btn btn-secondary' onclick='location.reload()'>Neu laden</button>`; } return false; };
 
@@ -556,51 +623,61 @@
         async function triggerSimplePushcut(scName) { showCustomAlert(`Befehl '${scName}' gesendet!`, "System"); try { await fetch(`${pushcutBaseUrl}${encodeURIComponent(scName)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ input: "" }) }); } catch(e){} }
         async function triggerPushcutLarge(sc, p) { await fetch(`${pushcutBaseUrl}${encodeURIComponent(sc)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ input: p }) }); }
 
-        // --- THEME ENGINE LOGIK (NEU: CLIENT SIDE SYNC) ---
+        // --- THEME ENGINE LOGIK (NEU: CLIENT SIDE SYNC & INTRO ANIMATION) ---
+        function playAmgIntro() {
+            hasPlayedAmgIntro = true;
+            let overlay = document.getElementById("amg-intro-overlay");
+            let star = document.getElementById("amg-intro-star");
+            let logo = document.getElementById("amg-intro-logo");
+            
+            overlay.classList.add("active");
+            star.classList.remove("amg-anim-star"); logo.classList.remove("amg-anim-logo");
+            void overlay.offsetWidth; // Reflow
+            star.classList.add("amg-anim-star"); logo.classList.add("amg-anim-logo");
+            
+            setTimeout(() => { overlay.classList.remove("active"); }, 3800);
+        }
+
         function applyTheme(themeKey) {
             currentTheme = themeKey; document.body.className = "theme-" + themeKey.toLowerCase();
             let sel = document.getElementById('theme-selector'); if(sel) sel.value = themeKey;
             localStorage.setItem("userTheme", themeKey);
+            
+            // AMG Intro triggern, falls wir bereits auf der Main Screen sind und es noch nicht abgespielt wurde
+            if (themeKey === "AMG" && !hasPlayedAmgIntro && document.getElementById("main-screen").classList.contains("active")) {
+                playAmgIntro();
+            }
         }
         
         async function saveAndApplyTheme(themeKey, selElement) {
-            // Theme lokal sofort anwenden
             applyTheme(themeKey); 
-            let originalBg = selElement.style.background; 
-            selElement.style.background = "#10b981"; 
-            selElement.style.color = "#fff";
+            let originalBg = selElement.style.background; selElement.style.background = "#10b981"; selElement.style.color = "#fff";
             setTimeout(() => { selElement.style.background = originalBg; selElement.style.color = ""; }, 1000);
             
             try { 
-                // 1. Die aktuellste Liste vom Gist runterladen
                 const res = await fetchWithTimeout(deviceListUrl + "?t=" + Date.now());
                 if (!res.ok) throw new Error("Gist konnte nicht geladen werden.");
                 const currentGistText = await res.text();
                 
-                // 2. Den Text aufteilen und bearbeiten
                 const lines = currentGistText.split('\n');
                 let updatedLines = [];
-                let myExtTag = "ext-" + currentSessionName;
+                let pureName = currentSessionName.replace(/^ext-/, ""); // Wir vergleichen nur den echten Namen
                 
                 for(let line of lines) {
-                    if(line.trim() === "") continue; // Leere Zeilen überspringen
-                    
+                    if(line.trim() === "") continue;
                     let parts = line.split(';');
-                    // Wenn die Zeile dem aktuellen User gehört: Design überschreiben
-                    if(parts.length >= 2 && parts[1].trim() === myExtTag) {
-                        while(parts.length < 3) parts.push("0"); // Falls Hotspot-Perm fehlt, mit 0 auffüllen
-                        parts[3] = themeKey; // Das Design an Index 3 überschreiben/anhängen
+                    
+                    // Schauen ob der Eintrag dem aktuellen User gehört (egal ob mit ext- oder ohne)
+                    if(parts.length >= 2 && parts[1].trim().replace(/^ext-/, "") === pureName) {
+                        while(parts.length < 4) parts.push(""); // Falls das Array zu kurz ist, auffüllen
+                        parts[3] = themeKey; 
                         updatedLines.push(parts.join(';'));
                     } else {
-                        // Gehört einem anderen User -> Zeile einfach exakt so lassen wie sie ist
                         updatedLines.push(line);
                     }
                 }
                 
-                // 3. Den fertigen, neuen Datei-Inhalt wieder zusammensetzen
                 let newGistContent = updatedLines.join('\n');
-                
-                // 4. Den kompletten Textblock an Pushcut senden
                 await triggerPushcutLarge("KLF-WEB-SetTheme", newGistContent); 
                 
             } catch(e) { 
@@ -666,7 +743,6 @@
                 let boxesHtml = ""; for (let char of myDeviceId.substring(2)) { boxesHtml += `<div class="digit-box">${char}</div>`; } document.getElementById("digit-display-container").innerHTML = boxesHtml;
                 const shortcutLink = "shortcuts://run-shortcut?name=KLF Register&input=" + myDeviceId; document.getElementById("qr-image").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=000000&bgcolor=ffffff&data=" + encodeURIComponent(shortcutLink);
 
-                // SOFORT DAS LOKALE THEME ANWENDEN
                 let savedTheme = localStorage.getItem("userTheme");
                 if(savedTheme) applyTheme(savedTheme);
 
@@ -704,7 +780,9 @@
 
                     localStorage.setItem("userName", currentSessionName); 
                     if (!localStorage.getItem('bg_' + currentSessionName)) { syncBackgroundFromServer(currentSessionName); } else { applyUserBackground(currentSessionName); }
+                    
                     setScreen("main-screen");
+                    if (currentTheme === "AMG" && !hasPlayedAmgIntro) playAmgIntro();
                 } else {
                     localStorage.removeItem("userName"); currentSessionName = ""; applyUserBackground(null); applyTheme("LG");
                     setScreen("register-screen"); showSubScreen("unverified-main");
@@ -713,7 +791,9 @@
                 if (!fetchSuccess && localStorage.getItem("userName")) { 
                     currentSessionName = localStorage.getItem("userName"); 
                     let savedTheme = localStorage.getItem("userTheme"); if(savedTheme) applyTheme(savedTheme);
-                    applyUserBackground(currentSessionName); setScreen("main-screen"); 
+                    applyUserBackground(currentSessionName); 
+                    setScreen("main-screen"); 
+                    if (savedTheme === "AMG" && !hasPlayedAmgIntro) playAmgIntro();
                 } 
                 else { localStorage.removeItem("userName"); applyUserBackground(null); applyTheme("LG"); setScreen("register-screen"); showSubScreen("unverified-main"); }
             }
