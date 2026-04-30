@@ -117,14 +117,14 @@
         body.theme-amg .custom-text-input:focus, body.theme-amg .digit-input:focus { border-color: #00d2ff; box-shadow: 0 0 15px rgba(0, 150, 255, 0.4), inset 0 2px 10px rgba(0,0,0,0.8); }
 
         /* AMG Intro Animation Elements */
-        #amg-intro-overlay { position: fixed; inset: 0; background: radial-gradient(circle at center, #021124 0%, #000000 100%); z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+        #amg-intro-overlay { position: fixed; inset: 0; background: radial-gradient(circle at center, #021124 0%, #000000 100%); z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
         #amg-intro-overlay.active { opacity: 1; pointer-events: all; }
         
         #amg-intro-star { width: clamp(140px, 30vmin, 300px); opacity: 0; transform: scale(0.5); filter: drop-shadow(0 0 30px rgba(255,255,255,0.3)); }
         #amg-intro-logo { width: clamp(220px, 45vmin, 550px); opacity: 0; margin-top: clamp(20px, 6vmin, 60px); filter: brightness(0) invert(1) drop-shadow(0 0 20px rgba(255,255,255,0.3)); transform: translateY(20px); }
         
-        .amg-anim-star { animation: amgStarAnim 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-        .amg-anim-logo { animation: amgLogoAnim 1.5s 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .amg-anim-star { animation: amgStarAnim 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .amg-anim-logo { animation: amgLogoAnim 1s 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         
         @keyframes amgStarAnim {
             0% { opacity: 0; transform: scale(0.3) translateY(0); }
@@ -137,7 +137,10 @@
             100% { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- SERVER BANNER (NEU) --- */
+        #amg-skip-text { position: absolute; bottom: 30px; font-size: 0.8em; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0, 150, 255, 0.5); opacity: 0; animation: amgFadeIn 0.8s 1.2s forwards; text-align: center; width: 100%; font-weight: 600; padding: 0 20px; box-sizing: border-box; }
+        @keyframes amgFadeIn { to { opacity: 1; } }
+
+        /* --- SERVER BANNER --- */
         #server-info-banner { 
             position: fixed; top: 20px; left: 20px; right: 20px; 
             background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95)); 
@@ -236,13 +239,12 @@
 </head>
 <body class="theme-lg">
 
-    <!-- NEUES SERVER BANNER -->
+    <!-- SERVER BANNER -->
     <div id="server-info-banner">
         <svg class="svg-icon" style="color:#93c5fd; width:26px; height:26px; margin:0; opacity: 0.9;" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
         <div style="text-align:left;">
             <div style="font-size:0.7em; color:#94a3b8; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; margin-bottom: 2px;">Aktueller Server</div>
             <div style="font-size:1.15em; font-weight:800; color:#fff; display:flex; align-items:center; gap:6px;">
-                <!-- Mix-Blend-Mode Trick um weißen Hintergrund zu entfernen und Logo edel wirken zu lassen -->
                 <img src="https://i.ibb.co/6RbNDFqv/Apple-logo-black.jpg" alt="Apple" style="width:16px; height:16px; mix-blend-mode: screen; filter: invert(1); opacity: 0.9;">
                 iPhone 6s
             </div>
@@ -259,6 +261,7 @@
     <div id="amg-intro-overlay">
         <img id="amg-intro-star" src="https://i.ibb.co/7xMfZwV4/CMS2.png" alt="Mercedes Star">
         <img id="amg-intro-logo" src="https://i.ibb.co/HLj6hr8K/20500556-amg-marke-logo-symbol-weiss-mit-name-design-deutsche-autos-automobil-illustration-mit-schwa.png" alt="AMG Logo">
+        <div id="amg-skip-text">Aktuelles Design: AMG - Zum überspringen des Intros, beliebige Taste drücken</div>
     </div>
 
     <!-- GÄSTE NOTIFICATION BANNER -->
@@ -637,7 +640,7 @@
 
     </div>
 
-    <div class="version-number">v6.4.3 (Banner & Tab Titles)</div>
+    <div class="version-number">v6.4.4 (AMG Skip)</div>
 
     <!-- JAVASCRIPT START -->
     <script>
@@ -652,6 +655,8 @@
         
         let currentSessionName = ""; let currentHotspotPerm = "0"; let currentTheme = "LG"; let currentDeviceToDelete = null; let currentIphoneKey = ""; let isAdminUnlocked = false; 
         let hasPlayedAmgIntro = false;
+        let amgIntroTimeout = null;
+        let amgSkipHandler = null;
 
         window.onerror = function(msg, url, lineNo, columnNo, error) { let loadScreen = document.getElementById("loading-screen"); if (loadScreen) { loadScreen.innerHTML = `<div class='info-box error-box'>Systemfehler: ${msg}<br>Bitte Admin informieren.</div><button class='btn btn-secondary' onclick='location.reload()'>Neu laden</button>`; } return false; };
 
@@ -674,13 +679,36 @@
             let overlay = document.getElementById("amg-intro-overlay");
             let star = document.getElementById("amg-intro-star");
             let logo = document.getElementById("amg-intro-logo");
+            let text = document.getElementById("amg-skip-text");
             
             overlay.classList.add("active");
             star.classList.remove("amg-anim-star"); logo.classList.remove("amg-anim-logo");
+            text.style.animation = 'none';
             void overlay.offsetWidth; // Reflow
-            star.classList.add("amg-anim-star"); logo.classList.add("amg-anim-logo");
             
-            setTimeout(() => { overlay.classList.remove("active"); }, 3800);
+            star.classList.add("amg-anim-star"); logo.classList.add("amg-anim-logo");
+            text.style.animation = 'amgFadeIn 0.8s 1.2s forwards';
+            
+            amgSkipHandler = function(e) { skipAmgIntro(); };
+            document.addEventListener('keydown', amgSkipHandler);
+            document.addEventListener('pointerdown', amgSkipHandler);
+            
+            amgIntroTimeout = setTimeout(() => { skipAmgIntro(); }, 2500); // Shorter default duration
+        }
+
+        function skipAmgIntro() {
+            let overlay = document.getElementById("amg-intro-overlay");
+            if (!overlay.classList.contains("active")) return;
+            
+            clearTimeout(amgIntroTimeout);
+            document.removeEventListener('keydown', amgSkipHandler);
+            document.removeEventListener('pointerdown', amgSkipHandler);
+            
+            overlay.classList.remove("active");
+            
+            if (document.getElementById("main-screen").classList.contains("active")) {
+                setTimeout(showServerBanner, 500);
+            }
         }
 
         function applyTheme(themeKey) {
@@ -767,7 +795,7 @@
             } catch(e) {}
         }
 
-        // --- NEW: SERVER BANNER LOGIC ---
+        // --- SERVER BANNER LOGIC ---
         function showServerBanner() {
             let banner = document.getElementById('server-info-banner');
             if(!banner) return;
@@ -780,14 +808,13 @@
         function enterMainScreen() {
             setScreen("main-screen");
             if (currentTheme === "AMG" && !hasPlayedAmgIntro) {
-                playAmgIntro();
-                setTimeout(showServerBanner, 4000); // Erst nach Intro
+                playAmgIntro(); // Banner trigger runs when skipAmgIntro() runs at end of timeout
             } else {
                 setTimeout(showServerBanner, 500);
             }
         }
 
-        // --- NEW: INACTIVE TITLE LOGIC ---
+        // --- INACTIVE TITLE LOGIC ---
         function handleInactiveTitleChange() {
             let val = document.getElementById("inactive-title-selector").value;
             localStorage.setItem("inactiveTabTitleConfig", val);
