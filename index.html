@@ -96,7 +96,12 @@
         body.theme-amg { background: radial-gradient(circle at center, #020b14 0%, #000000 100%); color: #e0f2fe; }
         body.theme-amg .liquid-panel { background: linear-gradient(145deg, rgba(2, 10, 20, 0.85), rgba(0, 0, 0, 0.95)); border: 1px solid rgba(0, 150, 255, 0.3); border-top: 1px solid rgba(0, 200, 255, 0.4); box-shadow: 0 15px 40px rgba(0, 150, 255, 0.08), inset 0 0 20px rgba(0, 150, 255, 0.05); border-radius: 12px; backdrop-filter: blur(20px); }
         body.theme-amg h1 { background: none; -webkit-text-fill-color: #fff; text-shadow: 0 0 12px rgba(0, 150, 255, 0.6); font-weight: 400; letter-spacing: 2px; }
-        body.theme-amg #greeting-text { color: #7dd3fc; }
+        
+        /* Tighter Greeting & Logo in AMG Mode */
+        body.theme-amg #greeting-text { color: #7dd3fc; margin-bottom: 5px !important; }
+        #amg-ui-logo { display: none; margin: -5px auto 18px auto; width: clamp(120px, 18vw, 220px); filter: brightness(0) invert(1) drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+        body.theme-amg #amg-ui-logo { display: block; }
+        
         body.theme-amg .category-title { color: #00d2ff; letter-spacing: 3px; border-bottom: 1px solid rgba(0, 150, 255, 0.3); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; text-shadow: 0 0 8px rgba(0, 150, 255, 0.5); }
         body.theme-amg .btn-menu { background: linear-gradient(90deg, rgba(0, 20, 40, 0.6), rgba(0, 5, 15, 0.8)); border: 1px solid rgba(0, 150, 255, 0.2); border-left: 3px solid #00d2ff; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); color: #bae6fd; font-weight: 500; letter-spacing: 1px; transition: all 0.3s; }
         body.theme-amg .btn-menu:hover { background: linear-gradient(90deg, rgba(0, 40, 80, 0.8), rgba(0, 10, 30, 0.9)); border-color: rgba(0, 150, 255, 0.5); border-left-color: #ff003c; box-shadow: 0 0 15px rgba(0, 150, 255, 0.3); transform: translateX(4px); color: #fff; }
@@ -110,16 +115,13 @@
         body.theme-amg .info-box { background: rgba(0, 150, 255, 0.05); border-color: rgba(0, 150, 255, 0.2); color: #e0f2fe; }
         body.theme-amg .custom-text-input, body.theme-amg .digit-input { background: rgba(0, 10, 20, 0.8); border: 1px solid rgba(0, 150, 255, 0.3); color: #fff; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); }
         body.theme-amg .custom-text-input:focus, body.theme-amg .digit-input:focus { border-color: #00d2ff; box-shadow: 0 0 15px rgba(0, 150, 255, 0.4), inset 0 2px 10px rgba(0,0,0,0.8); }
-        
-        #amg-ui-logo { display: none; margin: 0 auto 25px auto; width: clamp(140px, 20vw, 280px); filter: brightness(0) invert(1) drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
-        body.theme-amg #amg-ui-logo { display: block; }
 
-        /* AMG Intro Animation Elements (NEW RESPONSIVE SCALING) */
+        /* AMG Intro Animation Elements (VMIN FOR PERFECT LANDSCAPE SCALING) */
         #amg-intro-overlay { position: fixed; inset: 0; background: radial-gradient(circle at center, #021124 0%, #000000 100%); z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
         #amg-intro-overlay.active { opacity: 1; pointer-events: all; }
         
-        #amg-intro-star { width: clamp(180px, 25vw, 450px); opacity: 0; transform: scale(0.5); filter: drop-shadow(0 0 30px rgba(255,255,255,0.3)); }
-        #amg-intro-logo { width: clamp(260px, 38vw, 650px); opacity: 0; margin-top: clamp(40px, 8vh, 100px); filter: brightness(0) invert(1) drop-shadow(0 0 20px rgba(255,255,255,0.3)); transform: translateY(20px); }
+        #amg-intro-star { width: clamp(140px, 30vmin, 300px); opacity: 0; transform: scale(0.5); filter: drop-shadow(0 0 30px rgba(255,255,255,0.3)); }
+        #amg-intro-logo { width: clamp(220px, 45vmin, 550px); opacity: 0; margin-top: clamp(20px, 6vmin, 60px); filter: brightness(0) invert(1) drop-shadow(0 0 20px rgba(255,255,255,0.3)); transform: translateY(20px); }
         
         .amg-anim-star { animation: amgStarAnim 2.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
         .amg-anim-logo { animation: amgLogoAnim 1.5s 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
@@ -134,6 +136,9 @@
             0% { opacity: 0; transform: translateY(20px); }
             100% { opacity: 1; transform: translateY(0); }
         }
+
+        /* --- SERVER BANNER --- */
+        #server-banner { position:fixed; top:0; left:0; right:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); color:rgba(255,255,255,0.9); text-align:center; padding:6px 10px; font-size:0.75em; font-weight:600; letter-spacing:1px; z-index:999999; border-bottom:1px solid rgba(255,255,255,0.15); transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
 
         /* --- ANIMATIONS --- */
         .anim-pop { animation: popIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards; }
@@ -219,6 +224,8 @@
     </style>
 </head>
 <body class="theme-lg">
+
+    <div id="server-banner">Aktueller Server: iPhone 6s</div>
 
     <div id="custom-bg"></div>
 
@@ -596,7 +603,7 @@
 
     </div>
 
-    <div class="version-number">v6.4.1 (AMG MBUX Scale Fix)</div>
+    <div class="version-number">v6.4.2 (Theme Sync & Landscape Fix)</div>
 
     <!-- JAVASCRIPT START -->
     <script>
@@ -648,7 +655,6 @@
             let sel = document.getElementById('theme-selector'); if(sel) sel.value = themeKey;
             localStorage.setItem("userTheme", themeKey);
             
-            // AMG Intro triggern, falls wir bereits auf der Main Screen sind und es noch nicht abgespielt wurde
             if (themeKey === "AMG" && !hasPlayedAmgIntro && document.getElementById("main-screen").classList.contains("active")) {
                 playAmgIntro();
             }
@@ -656,8 +662,10 @@
         
         async function saveAndApplyTheme(themeKey, selElement) {
             applyTheme(themeKey); 
-            let originalBg = selElement.style.background; selElement.style.background = "#10b981"; selElement.style.color = "#fff";
-            setTimeout(() => { selElement.style.background = originalBg; selElement.style.color = ""; }, 1000);
+            if(selElement) {
+                let originalBg = selElement.style.background; selElement.style.background = "#10b981"; selElement.style.color = "#fff";
+                setTimeout(() => { selElement.style.background = originalBg; selElement.style.color = ""; }, 1000);
+            }
             
             try { 
                 const res = await fetchWithTimeout(deviceListUrl + "?t=" + Date.now());
@@ -681,12 +689,54 @@
                     }
                 }
                 
-                let newGistContent = updatedLines.join('\n');
-                await triggerPushcutLarge("KLF-WEB-SetTheme", newGistContent); 
-                
+                await triggerPushcutLarge("KLF-WEB-SetTheme", updatedLines.join('\n')); 
             } catch(e) { 
                 console.warn("Theme Sync Fehler:", e);
                 showCustomAlert("Das Design wurde lokal angewendet, konnte aber nicht in der Cloud aktualisiert werden. (Serverfehler)", "Sync Fehler");
+            }
+        }
+
+        // --- NEW: THEME SYNC ON LOGIN ---
+        async function syncUserThemeOnLogin() {
+            try {
+                const res = await fetchWithTimeout(deviceListUrl + "?t=" + Date.now());
+                if (!res.ok) return;
+                const text = await res.text();
+                const lines = text.split('\n');
+                let userTheme = "LG";
+                let pureName = currentSessionName.replace(/^ext-/, "");
+
+                // Finde Theme eines bestehenden Geräts dieses Nutzers (falls vorhanden)
+                for(let line of lines) {
+                    if(line.trim() === "") continue;
+                    let p = line.split(';');
+                    if(p.length >= 4 && p[1].trim().replace(/^ext-/, "") === pureName && p[3].trim() !== "") {
+                        userTheme = p[3].trim();
+                        break;
+                    }
+                }
+
+                applyTheme(userTheme);
+
+                // Überschreibe Eintrag des aktuellen Geräts im Gist mit diesem gefundenen/default Theme
+                let updatedLines = [];
+                let myDeviceId = localStorage.getItem("deviceID");
+                for(let line of lines) {
+                    if(line.trim() === "") continue;
+                    let p = line.split(';');
+                    if(p[0].trim() === myDeviceId) {
+                        while(p.length < 4) p.push("");
+                        p[3] = userTheme;
+                        updatedLines.push(p.join(';'));
+                    } else {
+                        updatedLines.push(line);
+                    }
+                }
+                
+                // Schiebe gesamten aktualisierten Gist zurück auf den Server
+                await triggerPushcutLarge("KLF-WEB-SetTheme", updatedLines.join('\n'));
+            } catch(e) {
+                console.warn("Theme Sync Login Error:", e);
             }
         }
 
@@ -738,6 +788,11 @@
 
         // --- ON-LOAD INITIALISIERUNG ---
         window.onload = async function() {
+            setTimeout(() => {
+                let banner = document.getElementById('server-banner');
+                if(banner) banner.style.transform = 'translateY(-100%)';
+            }, 2000);
+
             try {
                 let myDeviceId = localStorage.getItem("deviceID");
                 if (!myDeviceId || myDeviceId.length < 3) { myDeviceId = "A-" + Math.floor(1000 + Math.random() * 9000); localStorage.setItem("deviceID", myDeviceId); }
@@ -811,7 +866,49 @@
         function openSetPinModal() { document.querySelectorAll('.pin-input').forEach(i=>i.value=""); document.getElementById("set-pin-error").style.display="none"; document.getElementById("set-pin-modal-overlay").style.display="flex"; document.getElementById("set-digit-1").focus(); }
         function closeSetPinModal() { document.getElementById("set-pin-modal-overlay").style.display="none"; }
         async function submitSetPin() { const code = Array.from(document.querySelectorAll('.pin-input')).map(i=>i.value).join(''); if(code.length !== 4 || code === "0000" || code === "1234"){ document.getElementById("set-pin-error").style.display="block"; return; } const btn = document.getElementById("btn-submit-pin"); let pState = startBtnProgress(btn, 2000, "Speichere..."); try { let payload = `${localStorage.getItem("deviceID")};${currentSessionName};${currentHotspotPerm};${code}`; await triggerPushcut(scSetPin, payload); stopBtnProgress(btn, pState); closeSetPinModal(); showCustomAlert("PIN erfolgreich für den Offline-Login gespeichert.", "PIN Gespeichert"); } catch(e){ stopBtnProgress(btn, pState); document.getElementById("set-pin-error").innerText="Fehler."; document.getElementById("set-pin-error").style.display="block"; } }
-        async function submitLogin() { const user = document.getElementById("login-username").value.trim(); const pin = Array.from(document.querySelectorAll('.login-pin-input')).map(i=>i.value).join(''); if(!user || pin.length !== 4){ document.getElementById("login-error").innerText="Bitte Benutzername und PIN eingeben."; document.getElementById("login-error").style.display="block"; return; } const btn = document.getElementById("btn-submit-login"); let pState = startBtnProgress(btn, 4550, "Prüfe Login..."); try { let response = await triggerPushcutWait(scLogin, `${localStorage.getItem("deviceID")};${user};${pin}`); stopBtnProgress(btn, pState); if (response.includes("correct")) { const og = btn.innerHTML; btn.innerHTML = '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>Erfolgreich!'; btn.style.background = "#10b981"; setTimeout(() => { currentSessionName = user; localStorage.setItem("userName", currentSessionName); if (!localStorage.getItem('bg_' + currentSessionName)) { syncBackgroundFromServer(currentSessionName); } else { applyUserBackground(currentSessionName); } setScreen("main-screen"); btn.style.background = ""; btn.innerHTML = og; btn.disabled = false; document.querySelectorAll('.login-pin-input').forEach(i=>i.value=""); document.getElementById("login-username").value=""; }, 500); } else { throw new Error("Wrong PIN"); } } catch(e) { stopBtnProgress(btn, pState); document.getElementById("login-error").innerText="PIN oder Benutzername falsch."; document.getElementById("login-error").style.display="block"; } }
+        
+        async function submitLogin() { 
+            const user = document.getElementById("login-username").value.trim(); 
+            const pin = Array.from(document.querySelectorAll('.login-pin-input')).map(i=>i.value).join(''); 
+            if(!user || pin.length !== 4){ document.getElementById("login-error").innerText="Bitte Benutzername und PIN eingeben."; document.getElementById("login-error").style.display="block"; return; } 
+            
+            const btn = document.getElementById("btn-submit-login"); 
+            let pState = startBtnProgress(btn, 4550, "Prüfe Login..."); 
+            
+            try { 
+                let response = await triggerPushcutWait(scLogin, `${localStorage.getItem("deviceID")};${user};${pin}`); 
+                stopBtnProgress(btn, pState); 
+                
+                if (response.includes("correct")) { 
+                    const og = btn.innerHTML; 
+                    btn.innerHTML = '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>Erfolgreich!'; 
+                    btn.style.background = "#10b981"; 
+                    
+                    setTimeout(async () => { 
+                        currentSessionName = user; 
+                        localStorage.setItem("userName", currentSessionName); 
+                        if (!localStorage.getItem('bg_' + currentSessionName)) { syncBackgroundFromServer(currentSessionName); } else { applyUserBackground(currentSessionName); } 
+                        
+                        // Führe den Theme Sync für das neue Gerät aus (wie gewünscht)
+                        await syncUserThemeOnLogin();
+                        
+                        setScreen("main-screen"); 
+                        btn.style.background = ""; 
+                        btn.innerHTML = og; 
+                        btn.disabled = false; 
+                        document.querySelectorAll('.login-pin-input').forEach(i=>i.value=""); 
+                        document.getElementById("login-username").value=""; 
+                    }, 500); 
+                } else { 
+                    throw new Error("Wrong PIN"); 
+                } 
+            } catch(e) { 
+                stopBtnProgress(btn, pState); 
+                document.getElementById("login-error").innerText="PIN oder Benutzername falsch."; 
+                document.getElementById("login-error").style.display="block"; 
+            } 
+        }
+
         function confirmDeleteDevice(id) { currentDeviceToDelete = id; document.getElementById("delete-target-id").innerText = id; document.getElementById("delete-device-modal-overlay").style.display = "flex"; setTimeout(() => document.getElementById("btn-confirm-delete").focus(), 100); }
         function closeDeleteDeviceModal() { document.getElementById("delete-device-modal-overlay").style.display = "none"; currentDeviceToDelete = null; }
         async function executeDeleteDevice() { if (!currentDeviceToDelete) return; const btn = document.getElementById("btn-confirm-delete"); let pState = startBtnProgress(btn, 3000, "Trennen..."); try { await triggerPushcut(scDelDevice, `${currentDeviceToDelete};ext-${currentSessionName};1`); stopBtnProgress(btn, pState); closeDeleteDeviceModal(); if (currentDeviceToDelete === localStorage.getItem("deviceID")) { localStorage.removeItem("userName"); currentSessionName = ""; applyUserBackground(null); applyTheme("LG"); let newDeviceId = "A-" + Math.floor(1000 + Math.random() * 9000); localStorage.setItem("deviceID", newDeviceId); document.getElementById("device-id-display").innerText = newDeviceId; document.getElementById("own-device-id-display").innerText = newDeviceId; const onlyDigits = newDeviceId.substring(2); let boxesHtml = ""; for (let char of onlyDigits) { boxesHtml += `<div class="digit-box">${char}</div>`; } document.getElementById("digit-display-container").innerHTML = boxesHtml; const shortcutLink = "shortcuts://run-shortcut?name=KLF Register&input=" + newDeviceId; document.getElementById("qr-image").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=000000&bgcolor=ffffff&data=" + encodeURIComponent(shortcutLink); setScreen("register-screen"); showSubScreen("unverified-main"); showCustomAlert("Du hast dieses Gerät getrennt. Die Verbindung wurde unwiderruflich aufgelöst und du wurdest abgemeldet.", "Sitzung beendet"); } else setTimeout(() => loadConnectedDevices(), 2500); } catch(e) { stopBtnProgress(btn, pState); showCustomAlert("Fehler beim Senden des Lösch-Befehls.", "Verbindungsfehler"); } }
