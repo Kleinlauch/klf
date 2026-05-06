@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KL Files WEB</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#050505">
+    
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon.png">
+    
+    <style>
+        /* --- GRUNDLAYOUT & CUSTOM BACKGROUND --- */
+        body { margin: 0; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: center; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #ffffff; background-color: #050505; box-sizing: border-box; user-select: none; -webkit-user-select: none; overflow-x: hidden; transition: background-color 0.5s ease, color 0.5s ease; }
+        #custom-bg { position: fixed; inset: 0; z-index: -2; background-size: cover; background-position: center; opacity: 0; transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 1.2s ease; }
+        .ambient-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: #000; transition: opacity 1s ease; }
+        .ambient-bg.hidden { opacity: 0; pointer-events: none; }
+        .orb { position: absolute; border-radius: 50%; filter: blur(90px); -webkit-filter: blur(90px); opacity: 0.55; pointer-events: none; }
+        .orb-1 { width: 50vw; height: 50vw; background: #6366f1; top: -10%; left: -10%; animation: float1 20s ease-in-out infinite alternate; }
+        .orb-2 { width: 60vw; height: 60vw; background: #a855f7; bottom: -20%; right: -10%; animation: float2 25s ease-in-out infinite alternate; }
+        .orb-3 { width: 40vw; height: 40vw; background: #ec4899; top: 40%; left: 30%; animation: float3 28s ease-in-out infinite alternate; }
+        @keyframes float1 { to { transform: translate(15vw, 15vh) scale(1.15); } }
+        @keyframes float2 { to { transform: translate(-15vw, -10vh) scale(1.1); } }
+        @keyframes float3 { to { transform: translate(10vw, -15vh) scale(1.2); } }
+
+        /* --- THEME ENGINE --- */
+        /* Helle Themes (WLG, MIN, WP, CLASSIC) Font-Colors & Basics */
+        body.theme-wlg, body.theme-min, body.theme-wp, body.theme-classic { color: #1a1a1a; }
+        body.theme-wlg h1, body.theme-min h1, body.theme-wp h1 { background: none; -webkit-text-fill-color: #111; text-shadow: none; }
+        body.theme-wlg #greeting-text, body.theme-min #greeting-text, body.theme-wp #greeting-text { color: #444; text-shadow: none; }
+        body.theme-wlg .category-title, body.theme-min .category-title, body.theme-wp .category-title { color: #666; text-shadow: none; }
+        body.theme-wlg .btn, body.theme-min .btn, body.theme-wp .btn { color: #111; text-shadow: none; }
+        body.theme-wlg .svg-icon, body.theme-min .svg-icon, body.theme-wp .svg-icon { color: #111; }
+        body.theme-wlg .info-box, body.theme-min .info-box, body.theme-wp .info-box, body.theme-classic .info-box { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); color: #333; box-shadow: none; }
+        body.theme-wlg .custom-text-input, body.theme-min .custom-text-input, body.theme-wp .custom-text-input, body.theme-classic .custom-text-input { background: rgba(255,255,255,0.8); border: 1px solid #ccc; color: #000; box-shadow: none; }
+
+        /* Button Overrides für helle Themes */
+        body.theme-wlg .btn-secondary, body.theme-min .btn-secondary, body.theme-wp .btn-secondary, body.theme-classic .btn-secondary { background: rgba(0,0,0,0.05); color: #333; border-color: rgba(0,0,0,0.2); box-shadow:none; }
+        body.theme-wlg .btn-secondary:hover, body.theme-min .btn-secondary:hover, body.theme-wp .btn-secondary:hover, body.theme-classic .btn-secondary:hover { background: rgba(0,0,0,0.1); }
+        body.theme-wlg .btn-del, body.theme-min .btn-del, body.theme-wp .btn-del, body.theme-classic .btn-del { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.3); }
+        body.theme-wlg .btn-del-modal, body.theme-min .btn-del-modal, body.theme-wp .btn-del-modal, body.theme-classic .btn-del-modal { background: #ef4444; color: #fff; box-shadow:none; text-shadow:none; border:none; }
+        
+        /* White Liquid Glass */
+        body.theme-wlg .liquid-panel { background: rgba(255,255,255,0.85); box-shadow: 0 15px 35px rgba(0,0,0,0.1); border: 1px solid rgba(255,255,255,0.8); }
+        body.theme-wlg .btn-menu { background: rgba(255,255,255,0.6); border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        body.theme-wlg .btn-menu:hover { background: rgba(255,255,255,0.9); }
+        body.theme-wlg .btn-pulse { background: rgba(255,255,255,0.8); color: #000; border: 1px solid #ccc; }
+
+        /* Dark Liquid Glass */
+        body.theme-dlg .liquid-panel { background: rgba(20,20,20,0.85); border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 20px 40px rgba(0,0,0,0.9); }
+        body.theme-dlg .btn-menu { background: rgba(40,40,40,0.6); border: 1px solid rgba(255,255,255,0.08); }
+        body.theme-dlg .btn-menu:hover { background: rgba(60,60,60,0.8); }
+
+        /* OLED Liquid Glass */
+        body.theme-olg, body.theme-olg .ambient-bg { background-color: #000; }
+        body.theme-olg .liquid-panel { background: #000; border: 1px solid #222; box-shadow: none; backdrop-filter: none; }
+        body.theme-olg .btn-menu { background: #0a0a0a; border: 1px solid #1a1a1a; box-shadow: none; }
+        body.theme-olg .btn-menu:hover { background: #111; border-color: #333; }
+        body.theme-olg .ambient-bg { opacity: 0 !important; }
+
+        /* Minimalistic */
+        body.theme-min .liquid-panel { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border: 1px solid #e5e7eb; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        body.theme-min .btn-menu { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: none; }
+        body.theme-min .btn-menu:hover { background: #f3f4f6; border-color: #d1d5db; transform: translateY(-2px); }
+        body.theme-min .btn-pulse { background: #111; color: #fff; border-radius: 8px; border: none; }
+        body.theme-min .btn-pulse::before { display: none; }
+        body.theme-min .ambient-bg { opacity: 0.1 !important; }
+
+        /* WordPress Style */
+        body.theme-wp { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif; background-color: #f0f0f1; }
+        body.theme-wp .liquid-panel { background: #fff; backdrop-filter: none; border: 1px solid #c3c4c7; border-radius: 2px; box-shadow: 0 1px 1px rgba(0,0,0,0.04); }
+        body.theme-wp .btn-menu { background: #f6f7f7; border: 1px solid #2271b1; border-radius: 3px; color: #2271b1; box-shadow: none; justify-content: center; }
+        body.theme-wp .btn-menu .svg-icon { color: #2271b1; display: none; }
+        body.theme-wp .btn-menu:hover { background: #f0f0f1; border-color: #135e96; color: #135e96; transform: none; }
+        body.theme-wp .btn-pulse { background: #2271b1; color: #fff; border-radius: 3px; border: none; box-shadow: none; }
+        body.theme-wp .btn-pulse::before { display: none; }
+        body.theme-wp .ambient-bg { opacity: 0 !important; }
+
+        /* Windows 7 Classic Aero */
+        body.theme-classic .liquid-panel { background: linear-gradient(to bottom, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 40%, rgba(200,200,200,0.1) 41%, rgba(200,200,200,0.3) 100%); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.7); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.8), inset 0 0 10px rgba(255,255,255,0.4); color: #111; }
+        body.theme-classic h1 { background: none; -webkit-text-fill-color: #000; text-shadow: 0 0 10px #fff; }
+        body.theme-classic #greeting-text { color: #111; text-shadow: 0 0 5px #fff; font-weight: bold; }
+        body.theme-classic .category-title { color: #222; text-shadow: 0 0 5px #fff; }
+        body.theme-classic .btn-menu { background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(240,240,240,0.8) 49%, rgba(210,210,210,0.8) 50%, rgba(230,230,230,0.9) 100%); border: 1px solid #777; border-radius: 4px; color: #000; text-shadow: 0 1px 0 #fff; box-shadow: inset 0 1px 1px rgba(255,255,255,1), 0 2px 3px rgba(0,0,0,0.1); }
+        body.theme-classic .btn-menu:hover { background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(220,240,255,0.9) 49%, rgba(180,220,255,0.9) 50%, rgba(200,240,255,1) 100%); border-color: #2b79d6; box-shadow: inset 0 1px 1px rgba(255,255,255,1), 0 0 8px rgba(43,121,214,0.7); transform: none; }
+        body.theme-classic .btn-pulse { background: linear-gradient(180deg, #519df7 0%, #2b79d6 49%, #155bb3 50%, #206ed1 100%); border: 1px solid #11427c; border-radius: 4px; color: #fff; box-shadow: inset 0 1px 1px rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.3); text-shadow: 0 1px 2px rgba(0,0,0,0.8); }
+        body.theme-classic .btn-pulse::before { display: none; }
+        body.theme-classic .svg-icon { color: #2b79d6; }
+        body.theme-classic .btn-pulse .svg-icon { color: #fff; }
+
+        /* AMG Theme MBUX Style */
+        body.theme-amg { background: radial-gradient(circle at center, #020b14 0%, #000000 100%); color: #e0f2fe; }
+        body.theme-amg .liquid-panel { background: linear-gradient(145deg, rgba(2, 10, 20, 0.85), rgba(0, 0, 0, 0.95)); border: 1px solid rgba(0, 150, 255, 0.3); border-top: 1px solid rgba(0, 200, 255, 0.4); box-shadow: 0 15px 40px rgba(0, 150, 255, 0.08), inset 0 0 20px rgba(0, 150, 255, 0.05); border-radius: 12px; backdrop-filter: blur(20px); }
+        body.theme-amg h1 { background: none; -webkit-text-fill-color: #fff; text-shadow: 0 0 12px rgba(0, 150, 255, 0.6); font-weight: 400; letter-spacing: 2px; }
+        
+        /* Tighter Greeting & Logo in AMG Mode */
+        body.theme-amg #greeting-text { color: #7dd3fc; margin-bottom: 5px !important; }
+        #amg-ui-logo { display: none; margin: -5px auto 18px auto; width: clamp(120px, 18vw, 220px); filter: brightness(0) invert(1) drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+        body.theme-amg #amg-ui-logo { display: block; }
+        
+        body.theme-amg .category-title { color: #00d2ff; letter-spacing: 3px; border-bottom: 1px solid rgba(0, 150, 255, 0.3); display: inline-block; padding-bottom: 5px; margin-bottom: 15px; text-shadow: 0 0 8px rgba(0, 150, 255, 0.5); }
+        body.theme-amg .btn-menu { background: linear-gradient(90deg, rgba(0, 20, 40, 0.6), rgba(0, 5, 15, 0.8)); border: 1px solid rgba(0, 150, 255, 0.2); border-left: 3px solid #00d2ff; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); color: #bae6fd; font-weight: 500; letter-spacing: 1px; transition: all 0.3s; }
+        body.theme-amg .btn-menu:hover { background: linear-gradient(90deg, rgba(0, 40, 80, 0.8), rgba(0, 10, 30, 0.9)); border-color: rgba(0, 150, 255, 0.5); border-left-color: #ff003c; box-shadow: 0 0 15px rgba(0, 150, 255, 0.3); transform: translateX(4px); color: #fff; }
+        body.theme-amg .btn-pulse { background: linear-gradient(135deg, #d40000, #8a0000); color: #fff; border: 1px solid #ff3333; box-shadow: 0 5px 20px rgba(204,0,0,0.4); border-radius: 4px; letter-spacing: 1px; font-weight: bold; }
+        body.theme-amg .btn-pulse::before { display: none; }
+        body.theme-amg .btn-pulse:hover { box-shadow: 0 5px 25px rgba(255,0,0,0.6); transform: translateY(-2px); }
+        body.theme-amg .svg-icon { color: #00d2ff; }
+        body.theme-amg .btn-pulse .svg-icon { color: #fff; }
+        body.theme-amg .btn-secondary { background: rgba(0,0,0,0.5); border: 1px solid rgba(0, 150, 255, 0.2); color: #7dd3fc; border-radius: 4px; box-shadow: none; }
+        body.theme-amg .btn-secondary:hover { background: rgba(0, 150, 255, 0.1); border-color: #00d2ff; color: #fff; }
+        body.theme-amg .info-box { background: rgba(0, 150, 255, 0.05); border-color: rgba(0, 150, 255, 0.2); color: #e0f2fe; }
+        body.theme-amg .custom-text-input, body.theme-amg .digit-input { background: rgba(0, 10, 20, 0.8); border: 1px solid rgba(0, 150, 255, 0.3); color: #fff; box-shadow: inset 0 2px 10px rgba(0,0,0,0.8); }
+        body.theme-amg .custom-text-input:focus, body.theme-amg .digit-input:focus { border-color: #00d2ff; box-shadow: 0 0 15px rgba(0, 150, 255, 0.4), inset 0 2px 10px rgba(0,0,0,0.8); }
+
+        /* AMG Intro Animation Elements */
+        #amg-intro-overlay { position: fixed; inset: 0; background: radial-gradient(circle at center, #021124 0%, #000000 100%); z-index: 100000; display: flex; flex-direction: column; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.4s ease; }
+        #amg-intro-overlay.active { opacity: 1; pointer-events: all; }
+        
+        #amg-intro-star { width: clamp(140px, 30vmin, 300px); opacity: 0; transform: scale(0.5); filter: drop-shadow(0 0 30px rgba(255,255,255,0.3)); }
+        #amg-intro-logo { width: clamp(220px, 45vmin, 550px); opacity: 0; margin-top: clamp(20px, 6vmin, 60px); filter: brightness(0) invert(1) drop-shadow(0 0 20px rgba(255,255,255,0.3)); transform: translateY(20px); }
+        
+        .amg-anim-star { animation: amgStarAnim 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        .amg-anim-logo { animation: amgLogoAnim 1s 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+        
+        @keyframes amgStarAnim {
+            0% { opacity: 0; transform: scale(0.3) translateY(0); }
+            30% { opacity: 1; transform: scale(1.15) translateY(0); }
+            50% { opacity: 1; transform: scale(1) translateY(0); }
+            100% { opacity: 1; transform: scale(0.85) translateY(-8vh); }
+        }
+        @keyframes amgLogoAnim {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        #amg-skip-text { position: absolute; bottom: 30px; font-size: 0.8em; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0, 150, 255, 0.5); opacity: 0; animation: amgFadeIn 0.8s 1.2s forwards; text-align: center; width: 100%; font-weight: 600; padding: 0 20px; box-sizing: border-box; }
+        @keyframes amgFadeIn { to { opacity: 1; } }
+
+        /* --- SERVER BANNER --- */
+        #server-info-banner { 
+            position: fixed; top: 20px; left: 20px; right: 20px; 
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95)); 
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); 
+            border-radius: 24px; z-index: 99999; padding: 16px 24px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.15); 
+            border: 1px solid rgba(255,255,255,0.15); 
+            transform: translateY(-150%); 
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
+            display: flex; align-items: center; justify-content: center; gap: 14px; 
+            pointer-events: none;
+        }
+
+        /* --- ANIMATIONS --- */
+        .anim-pop { animation: popIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards; }
+        @keyframes popIn { 0% { opacity: 0; transform: scale(0.85) translateY(25px); filter: blur(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); } }
+        .anim-fade { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes pulseRGB { 0% { text-shadow: 0 0 10px rgba(59,130,246,0.5); } 50% { text-shadow: 0 0 20px rgba(139,92,246,0.8); } 100% { text-shadow: 0 0 10px rgba(59,130,246,0.5); } }
+        .anim-slide-down { animation: slideDown 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards; }
+        @keyframes slideDown { 0% { opacity: 0; transform: translateY(-50px); } 100% { opacity: 1; transform: translateY(0); } }
+        @keyframes pulsePres { 0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.6); } 70% { box-shadow: 0 0 0 15px rgba(139, 92, 246, 0); } 100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); } }
+        .btn-pres-active { border-color: rgba(139, 92, 246, 0.8) !important; background: linear-gradient(180deg, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.1) 100%) !important; animation: pulsePres 2s infinite !important; color: #ddd6fe !important; }
+
+        /* --- LIQUID GLASS PANELS (STANDARD LG) --- */
+        .liquid-panel { background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%); backdrop-filter: blur(45px) saturate(200%); -webkit-backdrop-filter: blur(45px) saturate(200%); border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.3); border-left: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), inset 0 1px 1px rgba(255, 255, 255, 0.25), inset 0 -1px 1px rgba(0, 0, 0, 0.1); border-radius: 32px; width: 100%; max-width: 420px; padding: 35px 30px; position: relative; transition: max-width 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s ease, border 0.5s ease; }
+        .liquid-panel::-webkit-scrollbar { display: none; width: 0px; background: transparent; }
+        .liquid-panel { -ms-overflow-style: none; scrollbar-width: none; }
+        h1 { text-align: center; margin-top: 0; margin-bottom: 5px; font-size: 2.5em; background: linear-gradient(to bottom right, #fff, #cbd5e1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; letter-spacing: -1px; text-shadow: 0 4px 20px rgba(255,255,255,0.2); transition: color 0.5s ease; }
+        #greeting-text { text-align: center; color: rgba(255,255,255,0.8); font-size: 1.1em; margin-top: 0; margin-bottom: 25px; font-weight: 500; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .svg-icon { width: 22px; height: 22px; stroke-width: 1.7px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; margin-right: 14px; opacity: 0.8; transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); flex-shrink: 0; }
+
+        /* --- BUTTONS --- */
+        .btn { width: 100%; padding: 16px 20px; margin-bottom: 14px; border-radius: 20px; font-size: 1em; font-weight: 600; cursor: pointer; border: none; outline: none; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.2), box-shadow 0.4s ease, background 0.4s ease, color 0.4s ease, border 0.4s ease; color: #fff; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .btn-menu { background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%); border: 1px solid rgba(255, 255, 255, 0.1); border-top: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15); text-shadow: 0 1px 2px rgba(0,0,0,0.5); justify-content: flex-start; }
+        .btn:hover, body.keyboard-nav .btn:focus { transform: translateY(-4px) scale(1.02); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
+        .btn-menu:hover { background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.08) 100%); }
+        .btn:hover .svg-icon { opacity: 1; transform: scale(1.15) rotate(-3deg); }
+        .btn:active { transform: scale(0.94) !important; transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1) !important; box-shadow: 0 2px 10px rgba(0,0,0,0.3), inset 0 4px 10px rgba(0,0,0,0.5) !important; }
+        .btn-danger-hover:hover { background: linear-gradient(180deg, rgba(239, 68, 68, 0.4) 0%, rgba(239, 68, 68, 0.1) 100%) !important; border-color: rgba(239, 68, 68, 0.5) !important; color: #fca5a5 !important; }
+        .btn-secondary { background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); color: #d1d5db; }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.12); }
+        .btn-del { background: linear-gradient(180deg, rgba(239, 68, 68, 0.2) 0%, rgba(239, 68, 68, 0.05) 100%); border: 1px solid rgba(239, 68, 68, 0.3); border-top: 1px solid rgba(239, 68, 68, 0.5); color: #fca5a5; padding: 10px 14px; width: auto; font-size: 0.85em; border-radius: 14px; margin-bottom: 0; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2); }
+        .btn-del-modal { background: linear-gradient(180deg, rgba(239, 68, 68, 0.4) 0%, rgba(239, 68, 68, 0.1) 100%); border: 1px solid rgba(239, 68, 68, 0.5); border-top: 1px solid rgba(239, 68, 68, 0.8); color: #fff; box-shadow: 0 8px 25px rgba(239, 68, 68, 0.3), inset 0 1px 0 rgba(255,255,255,0.3); }
+        
+        @keyframes rgb-pulse-bg { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+        .btn-pulse { background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.02) 100%); border: 1px solid transparent; text-align: center; justify-content: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.4); position: relative; z-index: 1; }
+        .btn-pulse::before { content: ""; position: absolute; inset: -2px; border-radius: inherit; z-index: -1; background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899, #ef4444, #f59e0b, #10b981, #3b82f6); background-size: 300% 300%; animation: rgb-pulse-bg 6s linear infinite; mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite: exclude; -webkit-mask-composite: xor; }
+
+        .btn.has-progress { position: relative; overflow: hidden; pointer-events: none; }
+        .btn-progress-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: linear-gradient(90deg, rgba(59, 130, 246, 0.6), rgba(139, 92, 246, 0.7)); box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3); backdrop-filter: blur(5px); z-index: 0; transition: width linear; }
+        .btn-progress-text { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; width: 100%; font-weight: 700; text-shadow: 0 1px 5px rgba(0,0,0,0.8); }
+        .btn-progress-fill.waiting { animation: glassBlink 1.5s ease-in-out infinite; }
+        @keyframes glassBlink { 0%, 100% { opacity: 1; box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3); } 50% { opacity: 0.4; box-shadow: inset 0 0 40px rgba(59, 130, 246, 0.8); } }
+        .btn-disabled { opacity: 0.5; cursor: not-allowed; pointer-events: none; }
+
+        /* --- STRUKTUR ELEMENTE --- */
+        .category-title { font-size: 0.75em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 30px; margin-bottom: 14px; padding-left: 12px; letter-spacing: 2.5px; font-weight: 700; text-shadow: 0 1px 3px rgba(0,0,0,0.8); transition: color 0.5s ease; }
+        .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-top-color: #fff; border-radius: 50%; animation: spin 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite; margin: 0 auto 20px auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .info-box { background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 2px 10px rgba(0,0,0,0.6); padding: 18px; border-radius: 18px; margin-bottom: 20px; text-align: center; word-wrap: break-word; transition: all 0.5s ease; }
+        .error-box { border-color: rgba(239, 68, 68, 0.4) !important; color: #fca5a5 !important; background: rgba(239, 68, 68, 0.1) !important; }
+        .device-item { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); padding: 14px 18px; border-radius: 18px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.08); border-top: 1px solid rgba(255,255,255,0.15); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2); box-shadow: inset 0 1px 5px rgba(0,0,0,0.5); }
+        .device-item:hover { background: rgba(255,255,255,0.08); transform: scale(1.02) translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 1px 5px rgba(0,0,0,0.3); }
+        .view-section { display: none; } .view-section.active { display: block; }
+
+        /* --- EINGABEFELDER --- */
+        .digit-box-container { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; margin-top: 10px; }
+        .digit-box, .digit-input { width: 55px; height: 75px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.2); border-radius: 18px; color: #fff; font-size: 2.2em; font-family: -apple-system, monospace; font-weight: 700; display: flex; justify-content: center; align-items: center; text-align: center; box-shadow: inset 0 4px 15px rgba(0,0,0,0.8); outline: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2); padding: 0; }
+        .digit-input:focus { background: rgba(0,0,0,0.8); border-color: #3b82f6; border-bottom-color: #60a5fa; box-shadow: inset 0 4px 15px rgba(0,0,0,0.9), 0 10px 25px rgba(59,130,246,0.4); transform: translateY(-4px) scale(1.05); }
+        input[type="tel"] { -webkit-appearance: none; }
+        .custom-text-input { width: 100%; padding: 18px; border-radius: 18px; margin-bottom: 20px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 1.1em; text-align: center; outline: none; box-sizing: border-box; font-weight: 600; box-shadow: inset 0 4px 15px rgba(0,0,0,0.8); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2); }
+        .custom-text-input:focus { background: rgba(0,0,0,0.8); border-color: #3b82f6; border-bottom-color: #60a5fa; box-shadow: inset 0 4px 15px rgba(0,0,0,0.9), 0 10px 25px rgba(59,130,246,0.4); transform: translateY(-3px) scale(1.02); }
+        select.custom-text-input { appearance: none; -webkit-appearance: none; cursor: pointer; }
+        .pin-hidden { -webkit-text-security: disc; font-size: 2.6em; }
+        input[type="color"] { -webkit-appearance: none; border: none; width: 0; height: 0; padding: 0; margin: 0; opacity: 0; position: absolute; pointer-events: none; }
+
+        /* --- ADMIN BUTTONS --- */
+        .admin-close-btn { position: absolute; top: 20px; right: 20px; width: 35px; height: 35px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; color: rgba(255,255,255,0.6); z-index: 1000; }
+        .admin-close-btn:hover { background: rgba(239,68,68,0.3); color: #fca5a5; transform: rotate(90deg); }
+        .admin-back-btn { position: absolute; top: 20px; left: 20px; width: 35px; height: 35px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.3s; color: rgba(255,255,255,0.6); z-index: 1000; }
+        .admin-back-btn:hover { background: rgba(255,255,255,0.15); color: #fff; transform: translateX(-3px); }
+
+        /* --- RESPONSIVE --- */
+        .landscape-show { display: none; }
+        @media (min-width: 768px) {
+            .liquid-panel.wide-panel { max-width: 850px; padding: 40px 50px; }
+            .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; align-items: start; }
+            .menu-grid .category-title { margin-top: 10px; }
+            .menu-col:first-child .category-title:first-child, .menu-col:last-child .category-title:first-child { margin-top: 0; }
+        }
+        @media (orientation: landscape) { .landscape-hide { display: none; } .landscape-show { display: flex; } }
+        body.keyboard-nav *:focus { outline: none !important; box-shadow: 0 0 0 4px #10b981, 0 15px 35px rgba(16, 185, 129, 0.4) !important; transform: scale(1.04) translateY(-3px) !important; z-index: 100; }
+        .version-number { position: fixed; bottom: 15px; right: 25px; color: rgba(255,255,255,0.4); font-size: 0.85em; font-family: -apple-system, monospace; font-weight: 700; z-index: 1000; pointer-events: none; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
+    </style>
+</head>
+<body class="theme-lg">
+
+    <!-- SERVER BANNER -->
+    <div id="server-info-banner">
+        <svg class="svg-icon" style="color:#93c5fd; width:26px; height:26px; margin:0; opacity: 0.9;" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+        <div style="text-align:left;">
+            <div style="font-size:0.7em; color:#94a3b8; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; margin-bottom: 2px;">Aktueller Server</div>
+            <div style="font-size:1.15em; font-weight:800; color:#fff; display:flex; align-items:center; gap:6px;">
+                <img src="https://i.ibb.co/6RbNDFqv/Apple-logo-black.jpg" alt="Apple" style="width:16px; height:16px; mix-blend-mode: screen; filter: invert(1); opacity: 0.9;">
+                iPhone 6s
+            </div>
+        </div>
+    </div>
+
+    <div id="custom-bg"></div>
+
+    <div class="ambient-bg" id="ambient-layer">
+        <div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div>
+    </div>
+
+    <!-- AMG INTRO ANIMATION OVERLAY -->
+    <div id="amg-intro-overlay">
+        <img id="amg-intro-star" src="https://i.ibb.co/7xMfZwV4/CMS2.png" alt="Mercedes Star">
+        <img id="amg-intro-logo" src="https://i.ibb.co/HLj6hr8K/20500556-amg-marke-logo-symbol-weiss-mit-name-design-deutsche-autos-automobil-illustration-mit-schwa.png" alt="AMG Logo">
+        <div id="amg-skip-text">Aktuelles Design: AMG - Zum überspringen des Intros, beliebige Taste drücken</div>
+    </div>
+
+    <!-- GÄSTE NOTIFICATION BANNER -->
+    <div id="guest-pres-banner" class="anim-slide-down" style="display:none; position:fixed; top:20px; left:20px; right:20px; background:linear-gradient(135deg, rgba(139, 92, 246, 0.95), rgba(88, 28, 135, 0.95)); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-radius:24px; z-index:10000; padding:18px 24px; box-shadow:0 15px 40px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.3); border:1px solid rgba(255,255,255,0.2); touch-action:none; cursor:pointer;">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="flex-grow:1;" onclick="handleGuestBannerClick()">
+                <b style="display:flex; align-items:center; font-size:1.1em; margin-bottom:4px; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,0.5);">
+                    <svg class="svg-icon" style="color:#ddd6fe; margin-right:8px;" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                    Präsentation freigegeben
+                </b>
+                <span style="font-size:0.95em; color:#ddd6fe; font-weight:500;" id="guest-pres-banner-text">Tippe hier, um sie anzusehen...</span>
+            </div>
+            <div onclick="closeGuestBanner()" style="padding:10px; margin:-10px; cursor:pointer; color:rgba(255,255,255,0.6); transition:0.3s;">
+                <svg class="svg-icon" style="margin:0; width:22px; height:22px;" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </div>
+        </div>
+        <div style="width:40px; height:4px; background:rgba(255,255,255,0.3); border-radius:2px; margin: 15px auto 0 auto;"></div>
+    </div>
+
+    <!-- UNIVERSAL CUSTOM ALERT MODAL -->
+    <div id="custom-alert-modal" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 id="custom-alert-title" style="margin-top:0; color: #fff; font-size: 1.6em; font-weight:800;">Hinweis</h2>
+            <p id="custom-alert-text" style="color: rgba(255,255,255,0.8); font-size: 1.05em; margin-bottom: 30px; line-height: 1.6; white-space: pre-wrap; font-weight: 500;"></p>
+            <button class="btn btn-pulse" onclick="document.getElementById('custom-alert-modal').style.display='none'">OK</button>
+        </div>
+    </div>
+
+    <!-- UNIVERSAL CUSTOM CONFIRM MODAL -->
+    <div id="custom-confirm-modal" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); z-index:9998; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 id="custom-confirm-title" style="margin-top:0; color: #fff; font-size: 1.6em; font-weight:800;">Bist du sicher?</h2>
+            <p id="custom-confirm-text" style="color: rgba(255,255,255,0.8); font-size: 1.05em; margin-bottom: 30px; line-height: 1.6;"></p>
+            <button class="btn btn-del-modal" id="custom-confirm-yes">Ja, ausführen</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('custom-confirm-modal').style.display='none'" style="margin-top:10px;">Abbrechen</button>
+        </div>
+    </div>
+
+    <!-- ABMELDEN MODAL -->
+    <div id="logout-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(30px); z-index:9999; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 style="margin-top:0; color: #ef4444; font-size: 1.8em; font-weight:800;">Warnung!</h2>
+            <p style="color: rgba(255,255,255,0.8); font-size: 1.05em; margin-bottom: 20px;">Möchtest du dich wirklich abmelden und dein Gerät trennen?</p>
+            <div class="info-box error-box" style="margin-bottom:25px; padding:15px; font-weight: 500;">
+                Wenn du <b style="color:#fff;">keine PIN</b> für den Offline-Login festgelegt hast, kannst du diesen Account <b style="color:#fff;">nicht wiederherstellen</b>!
+            </div>
+            <button class="btn btn-del-modal" id="btn-confirm-logout" disabled onclick="executeLogout()">Verstanden & Abmelden (5s)</button>
+            <button class="btn btn-secondary" onclick="closeLogoutModal()">Abbrechen</button>
+        </div>
+    </div>
+
+    <!-- PRÄSENTATION MODALS -->
+    <div id="pres-pw-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(30px); z-index:9600; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 style="margin-top:0; color: #c4b5fd; font-size: 1.8em; font-weight:800;">Geschützt</h2>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.95em; margin-bottom: 20px;">Bitte gib das Passwort für diese Präsentation ein.</p>
+            <input type="password" id="pres-pw-input" class="custom-text-input" placeholder="Passwort..." autocomplete="off">
+            <p id="pres-pw-error" style="color: #fca5a5; font-size: 0.9em; margin-bottom: 15px; display: none; font-weight:600;">Passwort falsch.</p>
+            <button class="btn btn-pulse" onclick="checkPresPw()">Freischalten</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('pres-pw-modal-overlay').style.display='none'">Abbrechen</button>
+        </div>
+    </div>
+
+    <div id="pres-select-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(30px); z-index:9700; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 style="margin-top:0; color: #fff; font-size: 1.8em; font-weight:800;">Präsentationen</h2>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.95em; margin-bottom: 20px;">Mehrere Präsentationen sind freigegeben. Welche möchtest du öffnen?</p>
+            <div id="pres-select-container"></div>
+            <button class="btn btn-secondary" onclick="document.getElementById('pres-select-modal-overlay').style.display='none'">Abbrechen</button>
+        </div>
+    </div>
+
+    <div id="pres-links-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(30px); z-index:9800; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 id="pres-links-title" style="margin-top:0; color: #fff; font-size: 1.8em; font-weight:800;">Links</h2>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.95em; margin-bottom: 20px;">Wähle einen Inhalt aus.</p>
+            <div id="pres-links-container"></div>
+            <button class="btn btn-secondary" onclick="document.getElementById('pres-links-modal-overlay').style.display='none'">Schließen</button>
+        </div>
+    </div>
+
+    <div id="untis-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(30px); z-index:9500; justify-content:center; align-items:center; padding:10px;">
+        <div class="liquid-panel anim-pop" style="max-width: 95vw; max-height: 90vh; display: flex; flex-direction: column; align-items: center; padding: 20px;">
+            <h2 style="margin-top:0; color: #c4b5fd; font-weight:800; font-size: 1.8em;">WebUntis</h2>
+            <div style="overflow: auto; max-height: 65vh; width: 100%; border-radius: 12px; margin-bottom: 20px; box-shadow: inset 0 0 15px rgba(0,0,0,0.8); background: #000;">
+                <img id="untis-image-display" src="" alt="Stundenplan" style="width: 100%; height: auto; display: block;">
+            </div>
+            <button class="btn btn-secondary" onclick="document.getElementById('untis-modal-overlay').style.display='none'">Schließen</button>
+        </div>
+    </div>
+
+    <!-- EINSTELLUNGEN HAUPT-MODAL -->
+    <div id="settings-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); z-index:8400; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 style="margin-top:0; color: #fff; font-weight:800;">Einstellungen</h2>
+            
+            <div class="category-title" style="margin-top: 15px; text-align: left;">Sicherheit</div>
+            <button class="btn btn-menu" onclick="document.getElementById('settings-modal-overlay').style.display='none'; setScreen('connected-devices-screen');"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>Verbundene Geräte</button>
+
+            <div class="category-title" style="text-align: left;">Design & Style</div>
+            
+            <select id="theme-selector" class="custom-text-input" style="font-weight: bold; margin-bottom: 10px;" onchange="saveAndApplyTheme(this.value, this)">
+                <option value="LG">Liquid Glass (Standard)</option>
+                <option value="WLG">White Liquid Glass</option>
+                <option value="DLG">Dark Liquid Glass</option>
+                <option value="OLG">OLED Black Liquid Glass</option>
+                <option value="MIN">Minimalistic</option>
+                <option value="WP">WordPress Style</option>
+                <option value="CLASSIC">Classic Aero (Windows 7)</option>
+                <option value="AMG">AMG MBUX</option>
+            </select>
+
+            <button class="btn btn-menu" onclick="document.getElementById('settings-modal-overlay').style.display='none'; document.getElementById('bg-settings-modal-overlay').style.display='flex';"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>Eigenes Hintergrundbild...</button>
+            
+            <div class="category-title" style="text-align: left;">Tab-Titel (Inaktiv)</div>
+            <select id="inactive-title-selector" class="custom-text-input" style="font-weight: bold; margin-bottom: 10px;" onchange="handleInactiveTitleChange()">
+                <option value="komm-zurueck">Komm zurück!</option>
+                <option value="greeting">Zeitliche Begrüßung</option>
+                <option value="normal">KL Files WEB</option>
+                <option value="google">Google</option>
+                <option value="custom">Eigene...</option>
+                <option value="aus">AUS</option>
+            </select>
+            <input type="text" id="inactive-title-custom" class="custom-text-input" style="display:none; margin-bottom: 10px;" placeholder="Dein eigener Text..." oninput="saveInactiveCustomTitle()">
+
+            <button class="btn btn-secondary" style="margin-top:20px;" onclick="document.getElementById('settings-modal-overlay').style.display='none';">Schließen</button>
+        </div>
+    </div>
+
+    <!-- HINTERGRUND EINSTELLUNGEN SUB-MODAL -->
+    <div id="bg-settings-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); z-index:8500; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <div class="admin-back-btn" onclick="document.getElementById('bg-settings-modal-overlay').style.display='none'; document.getElementById('settings-modal-overlay').style.display='flex';"><svg class="svg-icon" style="margin:0; width:20px; height:20px;" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></div>
+            <h2 style="margin-top:0; color: #fff; font-weight:800;">Hintergrund</h2>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.9em; margin-bottom: 25px;">Wird via Cloud synchronisiert.</p>
+            <button class="btn btn-menu" id="btn-bg-live" onclick="setLiveWallpaper(this)"><svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>Standard Live Wallpaper</button>
+            <button class="btn btn-menu" id="btn-bg-color" onclick="document.getElementById('native-color-picker').click()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg>Einfarbigen Hintergrund wählen</button>
+            <input type="color" id="native-color-picker" onchange="handleColorPick(event)">
+            <button class="btn btn-pulse" id="btn-bg-upload" style="margin-top: 15px;" onclick="document.getElementById('bg-file-input').click()"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>Bild hochladen</button>
+            <input type="file" id="bg-file-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+        </div>
+    </div>
+
+    <!-- HOTSPOT STEALTH MODAL -->
+    <div id="hotspot-stealth-modal" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); z-index:8000; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 style="margin-top:0; color: #fff; font-weight:800;">Netzwerk Menü</h2>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.9em; margin-bottom: 25px;">Erweiterte Funktionen</p>
+            <button class="btn btn-pulse hotspot-request-btn" onclick="checkHotspotPermission()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>Hotspot anfragen</button>
+            <button class="btn btn-menu" onclick="showHotspotPassword(this)"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>Hotspot Passwort anzeigen</button>
+            <button class="btn btn-menu" onclick="showCustomAlert('Das Passwort ändert sich aus Sicherheitsgründen regelmäßig automatisch.', 'Sicherheit')"><svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Wieso ändert sich das Passwort?</button>
+            <button class="btn btn-secondary" style="margin-top:20px;" onclick="closeHotspotModal()">Schließen</button>
+        </div>
+    </div>
+
+    <!-- OVERLAY FÜR GPS ABFRAGE -->
+    <div id="gps-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); z-index:1000; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 style="margin-top:0; color: #fff; font-weight:800;">Standort mitsenden?</h2>
+            <p style="color: rgba(255,255,255,0.8); font-size: 0.95em; margin-bottom: 25px; line-height: 1.5;">Damit Admin Marco sieht, wo der Hotspot gebraucht wird.</p>
+            <button class="btn btn-pulse" onclick="executeHotspot(true)"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>Ja, mit Standort</button>
+            <button class="btn btn-secondary" onclick="executeHotspot(false)">Ohne Standort anfragen</button>
+            <button style="background:transparent; border:none; color:rgba(255,255,255,0.5); padding:10px; margin-top:5px; cursor:pointer; text-decoration:underline; font-weight:600; transition: 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" onclick="closeGpsModal()">Abbrechen</button>
+        </div>
+    </div>
+
+    <!-- OVERLAYS FÜR GERÄTE/PIN -->
+    <div id="add-device-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); z-index:2000; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 style="margin-top:0; color: #fff; font-size: 1.8em; font-weight:800;">Gerät verbinden</h2>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.95em; margin-bottom: 15px;">Gib den 4-stelligen Code ein.</p>
+            <p id="add-device-error" style="color: #fca5a5; font-size: 0.85em; margin-bottom: 10px; display: none; font-weight: 600;">Bitte alle 4 Ziffern eingeben.</p>
+            <div class="digit-box-container">
+                <input type="tel" maxlength="1" class="digit-input add-device-input" id="digit-1" autocomplete="off"><input type="tel" maxlength="1" class="digit-input add-device-input" id="digit-2" autocomplete="off"><input type="tel" maxlength="1" class="digit-input add-device-input" id="digit-3" autocomplete="off"><input type="tel" maxlength="1" class="digit-input add-device-input" id="digit-4" autocomplete="off">
+            </div>
+            <button class="btn btn-pulse" id="btn-submit-device" style="margin-top: 15px;" onclick="submitAddDevice()">Verbinden</button>
+            <button style="background:transparent; border:none; color:rgba(255,255,255,0.5); padding:10px; cursor:pointer; text-decoration:underline; font-weight:600; transition: 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" onclick="closeAddDeviceModal()">Abbrechen</button>
+        </div>
+    </div>
+
+    <div id="delete-device-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); z-index:3000; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 style="margin-top:0; color: #fff; font-size: 1.6em; font-weight:800;">Gerät entfernen?</h2>
+            <p style="color: rgba(255,255,255,0.8); font-size: 0.95em; margin-bottom: 25px;">Möchtest du das Gerät <br><b id="delete-target-id" style="color: #fca5a5; font-size: 1.3em; font-family: monospace; display: block; margin-top: 8px;"></b> <br>wirklich trennen?</p>
+            <button class="btn btn-del-modal" id="btn-confirm-delete" onclick="executeDeleteDevice()">Ja, löschen</button>
+            <button style="background:transparent; border:none; color:rgba(255,255,255,0.5); padding:10px; cursor:pointer; text-decoration:underline; font-weight:600; transition: 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" onclick="closeDeleteDeviceModal()">Abbrechen</button>
+        </div>
+    </div>
+
+    <div id="set-pin-modal-overlay" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); z-index:2000; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <h2 style="margin-top:0; color: #fff; font-size: 1.8em; font-weight:800;">PIN festlegen</h2>
+            <p style="color: rgba(255,255,255,0.6); font-size: 0.95em; margin-bottom: 15px;">Leg eine 4-stellige PIN fest.</p>
+            <p id="set-pin-error" style="color: #fca5a5; font-size: 0.85em; margin-bottom: 10px; display: none; font-weight:600;">Ungültige PIN (Nicht: 0000/1234)</p>
+            <div class="digit-box-container">
+                <input type="tel" maxlength="1" class="digit-input pin-input pin-hidden" id="set-digit-1" autocomplete="off"><input type="tel" maxlength="1" class="digit-input pin-input pin-hidden" id="set-digit-2" autocomplete="off"><input type="tel" maxlength="1" class="digit-input pin-input pin-hidden" id="set-digit-3" autocomplete="off"><input type="tel" maxlength="1" class="digit-input pin-input pin-hidden" id="set-digit-4" autocomplete="off">
+            </div>
+            <button class="btn btn-pulse" id="btn-submit-pin" style="margin-top: 15px;" onclick="submitSetPin()">PIN Speichern</button>
+            <button style="background:transparent; border:none; color:rgba(255,255,255,0.5); padding:10px; cursor:pointer; text-decoration:underline; font-weight:600; transition: 0.3s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.5)'" onclick="closeSetPinModal()">Abbrechen</button>
+        </div>
+    </div>
+
+    <!-- ADMIN MODALS -->
+    <div id="admin-auth-modal" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(30px); z-index:9000; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center;">
+            <div class="admin-close-btn" onclick="document.getElementById('admin-auth-modal').style.display='none'">✖</div>
+            <h2 style="margin-top:0; color: #fff; font-weight:800; display:flex; justify-content:center; align-items:center;"><svg class="svg-icon" style="width:28px; height:28px; color:#f59e0b;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Authentifizieren</h2>
+            <div id="admin-auth-selection" class="active view-section">
+                <button class="btn btn-menu" onclick="showAdminAuthSub('admin-auth-key')"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>iPhone Key</button>
+                <button class="btn btn-menu" onclick="showAdminAuthSub('admin-auth-login')"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Admin Konto Login</button>
+            </div>
+            <div id="admin-auth-login" class="view-section">
+                <input type="text" id="admin-username" class="custom-text-input" placeholder="Admin Benutzername" autocomplete="off" style="margin-top:15px;">
+                <div class="info-box" style="border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.08);">
+                    <span style="font-size: 0.8em; color: #fcd34d; display:block; margin-bottom: 15px; font-weight:800; letter-spacing: 2px;">4-STELLIGE PIN</span>
+                    <div class="digit-box-container" style="margin-bottom: 0;">
+                        <input type="tel" maxlength="1" class="digit-input admin-pin-input pin-hidden" id="admin-digit-1" autocomplete="off"><input type="tel" maxlength="1" class="digit-input admin-pin-input pin-hidden" id="admin-digit-2" autocomplete="off"><input type="tel" maxlength="1" class="digit-input admin-pin-input pin-hidden" id="admin-digit-3" autocomplete="off"><input type="tel" maxlength="1" class="digit-input admin-pin-input pin-hidden" id="admin-digit-4" autocomplete="off">
+                    </div>
+                </div>
+                <p id="admin-login-error" style="color: #fca5a5; font-size: 0.9em; margin-bottom: 20px; display: none; font-weight:600;"></p>
+                <button class="btn btn-pulse" id="btn-admin-submit" onclick="submitAdminLogin()">Einloggen</button>
+                <button class="btn btn-secondary" onclick="showAdminAuthSub('admin-auth-selection')">Zurück</button>
+            </div>
+            <div id="admin-auth-key" class="view-section">
+                <p style="color: rgba(255,255,255,0.8); font-size: 0.95em; margin-bottom: 20px;">Sende Push-Anfrage an Master-Gerät.</p>
+                <div id="iphone-key-area"><button id="btn-req-key" class="btn btn-pulse" onclick="requestIphoneKey()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>Key anfragen</button></div>
+                <button class="btn btn-secondary" style="margin-top:15px;" onclick="showAdminAuthSub('admin-auth-selection')">Zurück</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-menu-modal" class="anim-fade" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); backdrop-filter:blur(40px); z-index:9100; justify-content:center; align-items:center; padding:20px;">
+        <div class="liquid-panel anim-pop" style="text-align:center; max-height:90vh; overflow-y:auto; max-width: 500px;">
+            <div class="admin-back-btn" onclick="hideAdminMenu()" title="Menü verbergen"><svg class="svg-icon" style="margin:0; width:20px; height:20px;" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg></div>
+            <div class="admin-close-btn" onclick="lockAdminMenu()" title="Sperren">✖</div>
+            <h2 style="margin-top:0; color: #fff; font-weight:800; font-size: 2em; letter-spacing: 1px; text-shadow: 0 0 20px rgba(239,68,68,0.5);"><svg class="svg-icon" style="width:30px; height:30px; color:#ef4444;" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Admin Panel</h2>
+            <p style="color: #fca5a5; font-size: 0.85em; font-weight:700; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 2px;">Vollzugriff aktiv</p>
+            <button class="btn btn-menu btn-danger-hover" onclick="confirmAction('Server-E-STOP', 'Willst du den Server notabschalten?')"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Server Emergency STOP</button>
+            <button class="btn btn-menu" onclick="triggerSimplePushcut('17.lock')"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>iPhone 17 Pro LOCK</button>
+            <button class="btn btn-menu" onclick="triggerSimplePushcut('17.unlock')"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>iPhone 17 Pro UNLOCK</button>
+            <button class="btn btn-menu" onclick="triggerSimplePushcut('Server Check')"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>Server Check senden</button>
+            <button class="btn btn-menu" onclick="triggerSimplePushcut('server.auto.check')"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>Auto Check MANUAL</button>
+            <button class="btn btn-menu" onclick="triggerSimplePushcut('klf.hotspot.lock')"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Hotspot Funktion sperren</button>
+            <button class="btn btn-menu" onclick="triggerSimplePushcut('klf.hotspot.unlock')"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>Hotspot Funktion entsperren</button>
+            <button class="btn btn-menu" onclick="triggerSimplePushcut('focus.bb.on')"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>Fokus Bildungsbunker an</button>
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <input type="text" id="custom-shortcut-name" class="custom-text-input" placeholder="Shortcut Name..." style="margin-bottom: 10px;">
+                <button class="btn btn-pulse" onclick="runCustomPushcut()"><svg class="svg-icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>Run Pushcut</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HAUPT APP CONTAINER -->
+    <div id="app-container" class="liquid-panel anim-pop">
+        
+        <div id="loading-screen" class="view-section active" style="text-align:center; padding:40px 0;">
+            <div class="spinner"></div>
+            <p style="color: rgba(255,255,255,0.8); letter-spacing: 1px; font-weight:600; animation: pulseRGB 2s infinite;">Verifiziere System...</p>
+        </div>
+
+        <!-- REGISTRIERUNGS-BEREICH (UNVERIFIED) -->
+        <div id="register-screen" class="view-section">
+            <h1 style="font-size: 1.8em; margin-bottom: 5px; background: none; color: #fca5a5; -webkit-text-fill-color: #fca5a5; text-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);">Zugriff verweigert</h1>
+            <p style="text-align: center; color: rgba(255,255,255,0.6); font-size: 0.9em; margin-bottom: 25px;">Dein Gerät ist nicht verifiziert.</p>
+
+            <div id="unverified-main" class="view-section active anim-pop">
+                <button class="btn btn-secondary" onclick="manualCheck()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>Neu Prüfen</button>
+                <div class="info-box" style="background: rgba(255,255,255,0.03);">
+                    <span style="font-size: 0.8em; color: rgba(255,255,255,0.5); font-weight:700; letter-spacing:1px;">DEINE GERÄTE-ID</span><br>
+                    <strong id="device-id-display" style="font-size: 1.8em; letter-spacing: 4px; color: white; display: block; margin-top: 5px;"></strong>
+                </div>
+                <button class="btn btn-pulse" onclick="showSubScreen('unverified-qr')"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>Register Code</button>
+                <button class="btn btn-secondary" onclick="showSubScreen('unverified-connected')"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>Als Verbundenes Gerät einrichten</button>
+                <button class="btn btn-secondary" onclick="showSubScreen('unverified-login')"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Mit Login Fortfahren</button>
+                <button class="btn btn-secondary" onclick="openAdminPanel()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Admin Panel (Auth)</button>
+            </div>
+
+            <div id="unverified-qr" class="view-section anim-pop" style="text-align: center;">
+                <p style="color: rgba(255,255,255,0.8); font-size: 0.9em; font-weight:500;">Scanne diesen Code mit dem Admin-Gerät:</p>
+                <div style="background: rgba(255,255,255,0.95); padding: 15px; border-radius: 20px; display: inline-block; margin-bottom: 25px; box-shadow: 0 15px 35px rgba(0,0,0,0.6);">
+                    <img id="qr-image" src="" alt="QR Code" width="200" height="200" style="mix-blend-mode: multiply;">
+                </div>
+                <button class="btn btn-secondary" onclick="manualCheck()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>Neu prüfen</button>
+                <button style="background:transparent; border:none; color:rgba(255,255,255,0.5); padding:10px; font-weight:600; cursor:pointer;" onclick="showSubScreen('unverified-main')">Zurück</button>
+            </div>
+
+            <div id="unverified-connected" class="view-section anim-pop" style="text-align: center;">
+                <p style="color: rgba(255,255,255,0.8); font-size: 0.95em; margin-bottom: 25px; line-height: 1.6;">Öffne KL Files auf deinem Handy, gehe zu <br><b style="color:#fff;">Einstellungen ➔ Verbundene Geräte</b><br> und klicke auf <b>+ Gerät hinzufügen</b>.</p>
+                <div class="info-box" style="border-color: rgba(59, 130, 246, 0.4); background: rgba(59, 130, 246, 0.08); padding-top: 25px;">
+                    <span style="font-size: 0.8em; color: #93c5fd; display:block; margin-bottom: 15px; font-weight:800; letter-spacing: 2px;">GIB DIESEN CODE EIN</span>
+                    <div id="digit-display-container" class="digit-box-container"></div>
+                </div>
+                <button class="btn btn-pulse" onclick="manualCheck()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>Log In / Neu prüfen</button>
+                <button style="background:transparent; border:none; color:rgba(255,255,255,0.5); padding:10px; font-weight:600; cursor:pointer;" onclick="showSubScreen('unverified-main')">Zurück</button>
+            </div>
+
+            <div id="unverified-login" class="view-section anim-pop" style="text-align: center;">
+                <p style="color: rgba(255,255,255,0.8); font-size: 0.95em; margin-bottom: 20px; font-weight:600;">Manuelles Login via PIN</p>
+                <input type="text" id="login-username" class="custom-text-input" placeholder="Benutzername" autocomplete="off">
+                <div class="info-box" style="border-color: rgba(59, 130, 246, 0.4); background: rgba(59, 130, 246, 0.08);">
+                    <span style="font-size: 0.8em; color: #93c5fd; display:block; margin-bottom: 15px; font-weight:800; letter-spacing: 2px;">4-STELLIGE PIN</span>
+                    <div class="digit-box-container" style="margin-bottom: 0;">
+                        <input type="tel" maxlength="1" class="digit-input login-pin-input pin-hidden" id="login-digit-1" autocomplete="off"><input type="tel" maxlength="1" class="digit-input login-pin-input pin-hidden" id="login-digit-2" autocomplete="off"><input type="tel" maxlength="1" class="digit-input login-pin-input pin-hidden" id="login-digit-3" autocomplete="off"><input type="tel" maxlength="1" class="digit-input login-pin-input pin-hidden" id="login-digit-4" autocomplete="off">
+                    </div>
+                </div>
+                <p id="login-error" style="color: #fca5a5; font-size: 0.9em; margin-bottom: 20px; display: none; font-weight:600;">PIN oder Benutzername falsch.</p>
+                <button class="btn btn-pulse" id="btn-submit-login" onclick="submitLogin()">Einloggen</button>
+                <button style="background:transparent; border:none; color:rgba(255,255,255,0.5); padding:10px; font-weight:600; cursor:pointer;" onclick="showSubScreen('unverified-main')">Zurück</button>
+            </div>
+        </div>
+
+        <!-- HAUPTMENÜ (VERIFIED) -->
+        <div id="main-screen" class="view-section anim-pop">
+            <h1>KL Files</h1>
+            <p id="greeting-text"></p>
+            <img id="amg-ui-logo" src="https://i.ibb.co/HLj6hr8K/20500556-amg-marke-logo-symbol-weiss-mit-name-design-deutsche-autos-automobil-illustration-mit-schwa.png" alt="AMG">
+            
+            <div class="menu-grid">
+                <div class="menu-col">
+                    <div class="category-title">System & Bildung</div>
+                    <button class="btn btn-menu" onclick="window.open('https://stundenplan-public.tiiny.site/', '_blank')"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>Stundenplan</button>
+                    
+                    <button class="btn btn-menu" id="webuntis-btn" style="display: none; border-color: rgba(139, 92, 246, 0.4); color: #c4b5fd;" onclick="fetchWebUntis(this)">
+                        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        WebUntis (Marco)
+                    </button>
+
+                    <button class="btn btn-menu" onclick="openTaskcards()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Taskcards</button>
+                    <button class="btn btn-menu" onclick="window.open('https://kleinlauch.wordpress.com/archiv/', '_blank')"><svg class="svg-icon" viewBox="0 0 24 24"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>Archiv</button>
+
+                    <div class="category-title">Präsentationen</div>
+                    <div id="dynamic-presentations-container"><div class="spinner" style="width:20px; height:20px; border-width:2px; opacity:0.5;"></div></div>
+                </div>
+                <div class="menu-col">
+                    <div class="landscape-hide">
+                        <div class="category-title">Netzwerk</div>
+                        <button class="btn btn-pulse hotspot-request-btn" onclick="checkHotspotPermission()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>Hotspot anfragen</button>
+                        <button class="btn btn-menu" onclick="showHotspotPassword(this)"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path></svg>Hotspot Passwort anzeigen</button>
+                        <button class="btn btn-menu" onclick="showCustomAlert('Das Passwort ändert sich aus Sicherheitsgründen regelmäßig automatisch.', 'Sicherheit')"><svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Wieso ändert sich das Passwort?</button>
+                    </div>
+
+                    <div class="category-title">Verwaltung & Einstellungen</div>
+                    
+                    <button class="btn btn-menu" style="border-color: rgba(245, 158, 11, 0.4); color: #fcd34d;" onclick="openAdminPanel()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Admin Panel</button>
+                    
+                    <button class="btn btn-menu" onclick="document.getElementById('settings-modal-overlay').style.display='flex';"><svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>Einstellungen</button>
+
+                    <button class="btn btn-menu" onclick="checkSchulden(this)"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>Schulden einsehen</button>
+                    
+                    <button class="btn btn-menu landscape-show" style="margin-top: 15px; border-color: rgba(59, 130, 246, 0.4); color: #93c5fd;" onclick="openHotspotModal()"><svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>Mehr...</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- VERBUNDENE GERÄTE SCREEN -->
+        <div id="connected-devices-screen" class="view-section anim-pop">
+            <h1 style="font-size: 2.2em;">Geräte</h1>
+            <p style="text-align:center; color:rgba(255,255,255,0.6); font-size:0.95em; margin-bottom:15px;">Remote-Logins verwalten</p>
+            
+            <div class="info-box" style="background: rgba(255,255,255,0.03); padding: 15px; margin-bottom: 25px; border-color: rgba(16, 185, 129, 0.3);">
+                <span style="font-size: 0.75em; color: rgba(255,255,255,0.5); font-weight:700; letter-spacing:1px; display:block; margin-bottom: 5px;">DEIN AKTUELLES GERÄT</span>
+                <strong id="own-device-id-display" style="font-size: 1.6em; letter-spacing: 2px; color: #10b981; font-family: monospace;"></strong>
+            </div>
+
+            <div id="devices-list-container"><div class="spinner"></div></div>
+            
+            <div style="display:flex; gap:10px; margin-top:25px;">
+                <button class="btn btn-pulse" id="btn-submit-device" style="flex:1; margin-bottom:0;" onclick="openAddDeviceModal()"><svg class="svg-icon" style="margin-right:5px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>Hinzufügen</button>
+                <button class="btn btn-secondary" style="flex:1; margin-bottom:0;" onclick="openSetPinModal()"><svg class="svg-icon" style="margin-right:5px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>PIN setzen</button>
+            </div>
+            
+            <button class="btn btn-del-modal" style="width: 100%; margin-top: 25px; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);" onclick="openLogoutModal()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>Gerät abmelden & trennen</button>
+            
+            <button class="btn btn-secondary" onclick="setScreen('main-screen')">Zurück</button>
+        </div>
+
+    </div>
+
+    <div class="version-number">v6.4.4 (AMG Skip)</div>
+
+    <!-- JAVASCRIPT START -->
+    <script>
+        document.addEventListener('contextmenu', function(event) { event.preventDefault(); });
+
+        const deviceListUrl = "https://gist.githubusercontent.com/Kleinlauch/72dbb2b92650e61b9cd713668fb23505/raw/command.txt";
+        const adminReadUrl  = "https://gist.githubusercontent.com/Kleinlauch/ce2ab147cfd0db465809b4d806b0a517/raw/command.txt";
+        const presentationsUrl = "https://gist.githubusercontent.com/Kleinlauch/ee388273b74cb58e8fa3413c2295599a/raw/command.txt";
+        const pushcutBaseUrl = "https://api.pushcut.io/loPBXSU7lmRjUzDvwnMUm/execute?shortcut=";
+        
+        const scHotspot="KLF-WEB-Hotspot", scAddDevice="KLF-WEB-Register", scDelDevice="KLF-WEB-Delete", scSetPin="KLF-WEB-SETPIN", scLogin="KLF-WEB-Login", scHotspotPass="KLF-WEB-HotspotPass";
+        
+        let currentSessionName = ""; let currentHotspotPerm = "0"; let currentTheme = "LG"; let currentDeviceToDelete = null; let currentIphoneKey = ""; let isAdminUnlocked = false; 
+        let hasPlayedAmgIntro = false;
+        let amgIntroTimeout = null;
+        let amgSkipHandler = null;
+
+        window.onerror = function(msg, url, lineNo, columnNo, error) { let loadScreen = document.getElementById("loading-screen"); if (loadScreen) { loadScreen.innerHTML = `<div class='info-box error-box'>Systemfehler: ${msg}<br>Bitte Admin informieren.</div><button class='btn btn-secondary' onclick='location.reload()'>Neu laden</button>`; } return false; };
+
+        function startBtnProgress(btn, durationMs, loadingText) { if (!btn) return null; const originalHTML = btn.innerHTML; btn.disabled = true; btn.classList.add('has-progress'); btn.innerHTML = `<div class="btn-progress-fill"></div><div class="btn-progress-text">${loadingText}</div>`; const fill = btn.querySelector('.btn-progress-fill'); void fill.offsetWidth; fill.style.transitionDuration = `${durationMs}ms`; fill.style.width = '100%'; let timeoutId = setTimeout(() => { if (btn.querySelector('.btn-progress-fill')) btn.querySelector('.btn-progress-fill').classList.add('waiting'); }, durationMs); return { originalHTML, timeoutId }; }
+        function stopBtnProgress(btn, state) { if (!btn || !state) return; clearTimeout(state.timeoutId); btn.classList.remove('has-progress'); btn.innerHTML = state.originalHTML; btn.disabled = false; }
+
+        function showCustomAlert(message, title = "System") { document.getElementById("custom-alert-title").innerText = title; document.getElementById("custom-alert-text").innerText = message; document.getElementById("custom-alert-modal").style.display = "flex"; setTimeout(() => { let btn = document.querySelector('#custom-alert-modal button'); if(btn) btn.focus(); }, 100); }
+        function confirmAction(shortcutName, text) { document.getElementById("custom-confirm-text").innerText = text; document.getElementById("custom-confirm-modal").style.display = "flex"; let btnYes = document.getElementById("custom-confirm-yes"); let newBtnYes = btnYes.cloneNode(true); btnYes.parentNode.replaceChild(newBtnYes, btnYes); newBtnYes.addEventListener('click', () => { document.getElementById("custom-confirm-modal").style.display = "none"; triggerSimplePushcut(shortcutName); }); setTimeout(() => newBtnYes.focus(), 100); }
+        function getGreeting(name) { const h = new Date().getHours(); let g = "Guten Tag"; if(h >= 0 && h < 5) g = "Gute Nacht"; else if(h >= 5 && h < 12) g = "Guten Morgen"; else if(h >= 18) g = "Guten Abend"; return `${g}, ${name}!`; }
+
+        async function fetchWithTimeout(url, options = {}, timeout = 6000) { const controller = new AbortController(); const id = setTimeout(() => controller.abort(), timeout); const response = await fetch(url, { ...options, signal: controller.signal }); clearTimeout(id); return response; }
+        async function triggerPushcut(sc, p) { await fetch(`${pushcutBaseUrl}${encodeURIComponent(sc)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ input: p || "" }) }); }
+        async function triggerPushcutWait(sc, p) { const r = await fetch(`${pushcutBaseUrl}${encodeURIComponent(sc)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ input: p || "" }) }); if (!r.ok) throw new Error("Server Request Failed"); return await r.text(); }
+        async function triggerSimplePushcut(scName) { showCustomAlert(`Befehl '${scName}' gesendet!`, "System"); try { await fetch(`${pushcutBaseUrl}${encodeURIComponent(scName)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ input: "" }) }); } catch(e){} }
+        async function triggerPushcutLarge(sc, p) { await fetch(`${pushcutBaseUrl}${encodeURIComponent(sc)}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ input: p }) }); }
+
+        // --- THEME ENGINE LOGIK ---
+        function playAmgIntro() {
+            hasPlayedAmgIntro = true;
+            let overlay = document.getElementById("amg-intro-overlay");
+            let star = document.getElementById("amg-intro-star");
+            let logo = document.getElementById("amg-intro-logo");
+            let text = document.getElementById("amg-skip-text");
+            
+            overlay.classList.add("active");
+            star.classList.remove("amg-anim-star"); logo.classList.remove("amg-anim-logo");
+            text.style.animation = 'none';
+            void overlay.offsetWidth; // Reflow
+            
+            star.classList.add("amg-anim-star"); logo.classList.add("amg-anim-logo");
+            text.style.animation = 'amgFadeIn 0.8s 1.2s forwards';
+            
+            amgSkipHandler = function(e) { skipAmgIntro(); };
+            document.addEventListener('keydown', amgSkipHandler);
+            document.addEventListener('pointerdown', amgSkipHandler);
+            
+            amgIntroTimeout = setTimeout(() => { skipAmgIntro(); }, 2500); // Shorter default duration
+        }
+
+        function skipAmgIntro() {
+            let overlay = document.getElementById("amg-intro-overlay");
+            if (!overlay.classList.contains("active")) return;
+            
+            clearTimeout(amgIntroTimeout);
+            document.removeEventListener('keydown', amgSkipHandler);
+            document.removeEventListener('pointerdown', amgSkipHandler);
+            
+            overlay.classList.remove("active");
+            
+            if (document.getElementById("main-screen").classList.contains("active")) {
+                setTimeout(showServerBanner, 500);
+            }
+        }
+
+        function applyTheme(themeKey) {
+            currentTheme = themeKey; document.body.className = "theme-" + themeKey.toLowerCase();
+            let sel = document.getElementById('theme-selector'); if(sel) sel.value = themeKey;
+            localStorage.setItem("userTheme", themeKey);
+            
+            if (themeKey === "AMG" && !hasPlayedAmgIntro && document.getElementById("main-screen").classList.contains("active")) {
+                playAmgIntro();
+            }
+        }
+        
+        async function saveAndApplyTheme(themeKey, selElement) {
+            applyTheme(themeKey); 
+            if(selElement) {
+                let originalBg = selElement.style.background; selElement.style.background = "#10b981"; selElement.style.color = "#fff";
+                setTimeout(() => { selElement.style.background = originalBg; selElement.style.color = ""; }, 1000);
+            }
+            
+            try { 
+                const res = await fetchWithTimeout(deviceListUrl + "?t=" + Date.now());
+                if (!res.ok) throw new Error("Gist konnte nicht geladen werden.");
+                const currentGistText = await res.text();
+                
+                const lines = currentGistText.split('\n');
+                let updatedLines = [];
+                let pureName = currentSessionName.replace(/^ext-/, "");
+                
+                for(let line of lines) {
+                    if(line.trim() === "") continue;
+                    let parts = line.split(';');
+                    
+                    if(parts.length >= 2 && parts[1].trim().replace(/^ext-/, "") === pureName) {
+                        while(parts.length < 4) parts.push(""); 
+                        parts[3] = themeKey; 
+                        updatedLines.push(parts.join(';'));
+                    } else {
+                        updatedLines.push(line);
+                    }
+                }
+                
+                await triggerPushcutLarge("KLF-WEB-SetTheme", updatedLines.join('\n')); 
+            } catch(e) { 
+                console.warn("Theme Sync Fehler:", e);
+                showCustomAlert("Das Design wurde lokal angewendet, konnte aber nicht in der Cloud aktualisiert werden. (Serverfehler)", "Sync Fehler");
+            }
+        }
+
+        async function syncUserThemeOnLogin() {
+            try {
+                const res = await fetchWithTimeout(deviceListUrl + "?t=" + Date.now());
+                if (!res.ok) return;
+                const text = await res.text();
+                const lines = text.split('\n');
+                let userTheme = "LG";
+                let pureName = currentSessionName.replace(/^ext-/, "");
+
+                for(let line of lines) {
+                    if(line.trim() === "") continue;
+                    let p = line.split(';');
+                    if(p.length >= 4 && p[1].trim().replace(/^ext-/, "") === pureName && p[3].trim() !== "") {
+                        userTheme = p[3].trim();
+                        break;
+                    }
+                }
+
+                applyTheme(userTheme);
+
+                let updatedLines = [];
+                let myDeviceId = localStorage.getItem("deviceID");
+                for(let line of lines) {
+                    if(line.trim() === "") continue;
+                    let p = line.split(';');
+                    if(p[0].trim() === myDeviceId) {
+                        while(p.length < 4) p.push("");
+                        p[3] = userTheme;
+                        updatedLines.push(p.join(';'));
+                    } else {
+                        updatedLines.push(line);
+                    }
+                }
+                
+                await triggerPushcutLarge("KLF-WEB-SetTheme", updatedLines.join('\n'));
+            } catch(e) {}
+        }
+
+        // --- SERVER BANNER LOGIC ---
+        function showServerBanner() {
+            let banner = document.getElementById('server-info-banner');
+            if(!banner) return;
+            banner.style.transform = 'translateY(0)';
+            setTimeout(() => {
+                banner.style.transform = 'translateY(-150%)';
+            }, 2500); // Bleibt 2,5 Sekunden sichtbar
+        }
+
+        function enterMainScreen() {
+            setScreen("main-screen");
+            if (currentTheme === "AMG" && !hasPlayedAmgIntro) {
+                playAmgIntro(); // Banner trigger runs when skipAmgIntro() runs at end of timeout
+            } else {
+                setTimeout(showServerBanner, 500);
+            }
+        }
+
+        // --- INACTIVE TITLE LOGIC ---
+        function handleInactiveTitleChange() {
+            let val = document.getElementById("inactive-title-selector").value;
+            localStorage.setItem("inactiveTabTitleConfig", val);
+            if(val === "custom") document.getElementById("inactive-title-custom").style.display = "block";
+            else document.getElementById("inactive-title-custom").style.display = "none";
+        }
+        function saveInactiveCustomTitle() {
+            localStorage.setItem("inactiveTabTitleCustom", document.getElementById("inactive-title-custom").value);
+        }
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden) {
+                let config = localStorage.getItem("inactiveTabTitleConfig") || "komm-zurueck";
+                if (config === "aus" || config === "normal") document.title = "KL Files WEB";
+                else if (config === "komm-zurueck") document.title = "Komm zurück!";
+                else if (config === "greeting") document.title = getGreeting(currentSessionName || "Gast").replace(/!$/, '');
+                else if (config === "google") document.title = "Google";
+                else if (config === "custom") document.title = localStorage.getItem("inactiveTabTitleCustom") || "KL Files WEB";
+            } else {
+                document.title = "KL Files WEB";
+            }
+        });
+
+        // --- LOGOUT LOGIK MIT COUNTDOWN ---
+        let logoutTimer = null;
+        function openLogoutModal() {
+            document.getElementById("logout-modal-overlay").style.display = "flex";
+            let btn = document.getElementById("btn-confirm-logout"); btn.disabled = true; let count = 5; btn.innerText = `Verstanden & Abmelden (${count}s)`;
+            logoutTimer = setInterval(() => {
+                count--;
+                if(count <= 0) { clearInterval(logoutTimer); btn.disabled = false; btn.innerText = "Ja, abmelden"; } else { btn.innerText = `Verstanden & Abmelden (${count}s)`; }
+            }, 1000);
+        }
+        function closeLogoutModal() { document.getElementById("logout-modal-overlay").style.display = "none"; clearInterval(logoutTimer); }
+        async function executeLogout() {
+            let btn = document.getElementById("btn-confirm-logout"); let pState = startBtnProgress(btn, 3000, "Melde ab...");
+            try {
+                let myDeviceId = localStorage.getItem("deviceID"); await triggerPushcut(scDelDevice, `${myDeviceId};ext-${currentSessionName};1`); stopBtnProgress(btn, pState); closeLogoutModal();
+                localStorage.removeItem("userName"); currentSessionName = ""; applyUserBackground(null); applyTheme("LG");
+                let newDeviceId = "A-" + Math.floor(1000 + Math.random() * 9000); localStorage.setItem("deviceID", newDeviceId); document.getElementById("device-id-display").innerText = newDeviceId; document.getElementById("own-device-id-display").innerText = newDeviceId;
+                const onlyDigits = newDeviceId.substring(2); let boxesHtml = ""; for (let char of onlyDigits) { boxesHtml += `<div class="digit-box">${char}</div>`; } document.getElementById("digit-display-container").innerHTML = boxesHtml;
+                const shortcutLink = "shortcuts://run-shortcut?name=KLF Register&input=" + newDeviceId; document.getElementById("qr-image").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=000000&bgcolor=ffffff&data=" + encodeURIComponent(shortcutLink);
+                setScreen("register-screen"); showSubScreen("unverified-main"); showCustomAlert("Du wurdest komplett abgemeldet und dein Gerät wurde vom Server getrennt.", "Erfolgreich");
+            } catch (e) { stopBtnProgress(btn, pState); showCustomAlert("Fehler beim Abmelden.", "Fehler"); }
+        }
+
+        // --- DYNAMISCHE PRÄSENTATIONEN ---
+        let currentPresentations = []; let activeGuestPres = []; let selectedPres = null; 
+        function isWindowActive(timeStr) { if (!timeStr || timeStr === '-') return false; try { let [datePart, timePart] = timeStr.split(','); if(!timePart) return false; let [day, month, year] = datePart.trim().split('.'); let [start, end] = timePart.trim().split('-'); let [sh, sm] = start.trim().split(':'); let [eh, em] = end.trim().split(':'); let now = new Date(); let startTime = new Date(year, month - 1, day, sh, sm); let endTime = new Date(year, month - 1, day, eh, em); return now >= startTime && now <= endTime; } catch(e) { return false; } }
+        async function loadPresentations() { try { const res = await fetchWithTimeout(presentationsUrl + "?t=" + Date.now()); if (!res.ok) return; const text = await res.text(); const lines = text.split('\n'); currentPresentations = lines.filter(l => l.trim() !== '').map((l, index) => { let parts = l.split(';'); let name = parts[0] ? parts[0].trim() : "Unbenannt"; let pw = parts[1] ? parts[1].trim() : "-"; let timeStr = parts[2] ? parts[2].trim() : "-"; let links = []; for (let i = 3; i < parts.length; i += 2) { if (parts[i] && parts[i+1]) { links.push({ label: parts[i].trim(), url: parts[i+1].trim() }); } } return { id: index, name, pw, timeStr, links }; }); renderAuthPresentations(); checkGuestPresentations(); } catch(e) {} }
+        function renderAuthPresentations() { const container = document.getElementById("dynamic-presentations-container"); if (!container) return; if (currentPresentations.length === 0) { container.innerHTML = `<div class='info-box' style='color:rgba(255,255,255,0.4); border:none; background:transparent;'>Keine verfügbar</div>`; return; } let html = ""; currentPresentations.forEach(pres => { let isActive = isWindowActive(pres.timeStr); let btnClass = isActive ? "btn btn-menu btn-pres-active" : "btn btn-menu"; html += `<button class="${btnClass}" onclick="handlePresAuthClick(${pres.id})"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>${pres.name}</button>`; }); container.innerHTML = html; }
+        function handlePresAuthClick(id) { selectedPres = currentPresentations.find(p => p.id === id); if (!selectedPres) return; if (isWindowActive(selectedPres.timeStr) || selectedPres.pw === '-') { openPresLinksModal(); } else { document.getElementById('pres-pw-input').value = ""; document.getElementById('pres-pw-error').style.display = "none"; document.getElementById('pres-pw-modal-overlay').style.display = "flex"; setTimeout(() => document.getElementById('pres-pw-input').focus(), 100); } }
+        function checkPresPw() { let input = document.getElementById('pres-pw-input').value; if (input === selectedPres.pw) { document.getElementById('pres-pw-modal-overlay').style.display = "none"; openPresLinksModal(); } else { document.getElementById('pres-pw-error').style.display = "block"; } }
+        function checkGuestPresentations() { activeGuestPres = currentPresentations.filter(p => isWindowActive(p.timeStr)); let banner = document.getElementById("guest-pres-banner"); let isRegisterScreenActive = document.getElementById("register-screen").classList.contains("active"); if (activeGuestPres.length > 0 && isRegisterScreenActive && !currentSessionName) { if (activeGuestPres.length === 1) document.getElementById("guest-pres-banner-text").innerText = `Tippe hier, um '${activeGuestPres[0].name}' anzusehen.`; else document.getElementById("guest-pres-banner-text").innerText = `${activeGuestPres.length} Präsentationen verfügbar. Tippe hier.`; if (banner.style.display === "none" && !banner.hasAttribute("data-dismissed")) banner.style.display = "block"; } else banner.style.display = "none"; }
+        function handleGuestBannerClick() { if (activeGuestPres.length === 1) { selectedPres = activeGuestPres[0]; openPresLinksModal(); } else if (activeGuestPres.length > 1) { let container = document.getElementById("pres-select-container"); let html = ""; activeGuestPres.forEach(pres => { html += `<button class="btn btn-menu" style="border-color: rgba(139, 92, 246, 0.4);" onclick="selectGuestPres(${pres.id})"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>${pres.name}</button>`; }); container.innerHTML = html; document.getElementById("pres-select-modal-overlay").style.display = "flex"; } }
+        function selectGuestPres(id) { document.getElementById("pres-select-modal-overlay").style.display = "none"; selectedPres = activeGuestPres.find(p => p.id === id); openPresLinksModal(); }
+        function openPresLinksModal() { if (!selectedPres) return; document.getElementById("pres-links-title").innerText = selectedPres.name; let container = document.getElementById("pres-links-container"); let html = ""; selectedPres.links.forEach(link => { html += `<button class="btn btn-menu" onclick="window.open('${link.url}', '_blank')"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>${link.label}</button>`; }); if (html === "") html = "<p style='color:#fca5a5;'>Keine Links hinterlegt.</p>"; container.innerHTML = html; document.getElementById("pres-links-modal-overlay").style.display = "flex"; }
+        function closeGuestBanner() { let banner = document.getElementById("guest-pres-banner"); banner.style.display = "none"; banner.setAttribute("data-dismissed", "true"); }
+        let bannerEl = document.getElementById("guest-pres-banner"); let startY = 0; bannerEl.addEventListener('touchstart', e => startY = e.touches[0].clientY); bannerEl.addEventListener('touchmove', e => { let dy = e.touches[0].clientY - startY; if (dy < 0) bannerEl.style.transform = `translateY(${dy}px)`; }); bannerEl.addEventListener('touchend', e => { let dy = e.changedTouches[0].clientY - startY; if (dy < -30) closeGuestBanner(); else bannerEl.style.transform = 'translateY(0)'; });
+        setInterval(() => { loadPresentations(); }, 30000);
+
+        // --- CLOUD & LOCAL BACKGROUND ENGINE ---
+        function applyUserBackground(userName) { const customBg = document.getElementById('custom-bg'); const ambientBg = document.getElementById('ambient-layer'); if (!userName) { customBg.style.opacity = '0'; setTimeout(() => { customBg.style.backgroundImage = 'none'; customBg.style.backgroundColor = 'transparent'; }, 1200); ambientBg.classList.remove('hidden'); return; } let bgData = localStorage.getItem('bg_' + userName); if (bgData && bgData !== 'default') { if (bgData.startsWith('#')) { customBg.style.backgroundImage = 'none'; customBg.style.backgroundColor = bgData; } else { customBg.style.backgroundImage = `url('${bgData}')`; customBg.style.backgroundColor = 'transparent'; } customBg.style.opacity = '1'; ambientBg.classList.add('hidden'); } else { customBg.style.opacity = '0'; setTimeout(() => { customBg.style.backgroundImage = 'none'; customBg.style.backgroundColor = 'transparent'; }, 1200); ambientBg.classList.remove('hidden'); } }
+        async function syncBackgroundFromServer(userName) { try { let serverBg = await triggerPushcutWait("KLF-WEB-getBG", userName); if (serverBg && serverBg.trim() !== "" && serverBg.trim() !== "null" && !serverBg.includes("Wörterbuch")) localStorage.setItem('bg_' + userName, serverBg.trim()); else localStorage.setItem('bg_' + userName, 'default'); applyUserBackground(userName); } catch (e) { localStorage.setItem('bg_' + userName, 'default'); applyUserBackground(userName); } }
+        async function saveAndSyncBgData(bgData, btn) { let pState = null; if(btn) pState = startBtnProgress(btn, 2670, "Synchronisiere..."); localStorage.setItem('bg_' + currentSessionName, bgData); applyUserBackground(currentSessionName); try { await triggerPushcutLarge("KLF-WEB-SetBG", `${currentSessionName};${bgData}`); if(pState) stopBtnProgress(btn, pState); document.getElementById('bg-settings-modal-overlay').style.display='none'; showCustomAlert("Hintergrund wurde gespeichert und in der Cloud gesichert!", "Style aktualisiert"); } catch(e) { if(pState) stopBtnProgress(btn, pState); showCustomAlert("Lokal angewendet, aber Cloud-Sync fehlgeschlagen.", "Achtung"); } }
+        function setLiveWallpaper(btn) { saveAndSyncBgData('default', btn); }
+        function handleColorPick(event) { saveAndSyncBgData(event.target.value, document.getElementById('btn-bg-color')); }
+        function handleImageUpload(event) { const file = event.target.files[0]; if (!file) return; const btn = document.getElementById('btn-bg-upload'); let pState = startBtnProgress(btn, 2670, "Verarbeite..."); const reader = new FileReader(); reader.onload = function(e) { const img = new Image(); img.onload = function() { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); let targetWidth = img.width; let targetHeight = img.height; const maxDim = 1200; if (targetWidth > maxDim || targetHeight > maxDim) { if (targetWidth > targetHeight) { targetHeight = (targetHeight / targetWidth) * maxDim; targetWidth = maxDim; } else { targetWidth = (targetWidth / targetHeight) * maxDim; targetHeight = maxDim; } } canvas.width = targetWidth; canvas.height = targetHeight; ctx.drawImage(img, 0, 0, targetWidth, targetHeight); const base64Data = canvas.toDataURL('image/jpeg', 0.6); stopBtnProgress(btn, pState); saveAndSyncBgData(base64Data, btn); }; img.src = e.target.result; }; reader.readAsDataURL(file); }
+
+        // --- ON-LOAD INITIALISIERUNG ---
+        window.onload = async function() {
+            // Lade Inaktiv-Titel Settings
+            let savedTitleConfig = localStorage.getItem("inactiveTabTitleConfig") || "komm-zurueck";
+            let selTitle = document.getElementById('inactive-title-selector');
+            if (selTitle) selTitle.value = savedTitleConfig;
+            if (savedTitleConfig === "custom") {
+                document.getElementById("inactive-title-custom").style.display = "block";
+                document.getElementById("inactive-title-custom").value = localStorage.getItem("inactiveTabTitleCustom") || "";
+            }
+
+            try {
+                let myDeviceId = localStorage.getItem("deviceID");
+                if (!myDeviceId || myDeviceId.length < 3) { myDeviceId = "A-" + Math.floor(1000 + Math.random() * 9000); localStorage.setItem("deviceID", myDeviceId); }
+                document.getElementById("device-id-display").innerText = myDeviceId;
+                document.getElementById("own-device-id-display").innerText = myDeviceId;
+                
+                let boxesHtml = ""; for (let char of myDeviceId.substring(2)) { boxesHtml += `<div class="digit-box">${char}</div>`; } document.getElementById("digit-display-container").innerHTML = boxesHtml;
+                const shortcutLink = "shortcuts://run-shortcut?name=KLF Register&input=" + myDeviceId; document.getElementById("qr-image").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=000000&bgcolor=ffffff&data=" + encodeURIComponent(shortcutLink);
+
+                let savedTheme = localStorage.getItem("userTheme");
+                if(savedTheme) applyTheme(savedTheme);
+
+                setupModalInputs(); await loadPresentations(); await performLiveCheck(myDeviceId);
+            } catch (err) { document.getElementById("loading-screen").innerHTML = `<div class='info-box error-box'>Systemfehler beim Starten:<br>${err.message}</div><button class='btn btn-secondary' onclick='location.reload()'>Neu laden</button>`; }
+        };
+
+        // --- HOTSPOT & NAVIGATION ---
+        function openHotspotModal() { document.getElementById("hotspot-stealth-modal").style.display = "flex"; }
+        function closeHotspotModal() { document.getElementById("hotspot-stealth-modal").style.display = "none"; }
+        document.addEventListener('keydown', (e) => { if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) { e.preventDefault(); document.body.classList.add('keyboard-nav'); navigateSpatialFocus(e.key); } else if (e.key === 'Enter') { if (document.activeElement && document.activeElement.tagName !== 'BUTTON' && document.activeElement.tagName !== 'SELECT' && !document.activeElement.classList.contains('digit-input') && document.activeElement.id !== 'login-username' && document.activeElement.id !== 'admin-username' && document.activeElement.id !== 'custom-shortcut-name' && document.activeElement.id !== 'pres-pw-input') { document.activeElement.click(); } } else { document.body.classList.add('keyboard-nav'); } });
+        document.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') document.body.classList.remove('keyboard-nav'); });
+        function getVisibleInteractables() { return Array.from(document.querySelectorAll('button:not([disabled]), input, select')).filter(el => { if (el.offsetWidth === 0 && el.offsetHeight === 0) return false; let parent = el.closest('.view-section'); if (parent && !parent.classList.contains('active')) return false; let modal = el.closest('[id$="-overlay"], [id$="-modal"]'); if (modal && modal.style.display === 'none') return false; return true; }); }
+        function navigateSpatialFocus(direction) { const interactables = getVisibleInteractables(); if (interactables.length === 0) return; let current = document.activeElement; if (!interactables.includes(current)) { interactables[0].focus(); return; } const currentRect = current.getBoundingClientRect(); let bestCandidate = null; let bestDistance = Infinity; interactables.forEach(el => { if (el === current) return; const rect = el.getBoundingClientRect(); let isCandidate = false; let distance = Infinity; const cx = currentRect.left + currentRect.width / 2, cy = currentRect.top + currentRect.height / 2; const ex = rect.left + rect.width / 2, ey = rect.top + rect.height / 2; const dx = ex - cx, dy = ey - cy, absDx = Math.abs(dx), absDy = Math.abs(dy); if (direction === 'ArrowUp' && dy < 0 && absDy >= absDx) { isCandidate = true; distance = Math.hypot(dx * 2.5, dy); } if (direction === 'ArrowDown' && dy > 0 && absDy >= absDx) { isCandidate = true; distance = Math.hypot(dx * 2.5, dy); } if (direction === 'ArrowLeft' && dx < 0 && absDx > absDy) { isCandidate = true; distance = Math.hypot(dx, dy * 2.5); } if (direction === 'ArrowRight' && dx > 0 && absDx > absDy) { isCandidate = true; distance = Math.hypot(dx, dy * 2.5); } if (isCandidate && distance < bestDistance) { bestDistance = distance; bestCandidate = el; } }); if (bestCandidate) bestCandidate.focus(); }
+        function setupModalInputs() { const containers = document.querySelectorAll('.digit-box-container'); containers.forEach(container => { const inputs = container.querySelectorAll('.digit-input'); inputs.forEach((input, index) => { input.addEventListener('input', (e) => { let errNodes = ["add-device-error", "set-pin-error", "login-error", "admin-login-error"]; errNodes.forEach(id => { let el = document.getElementById(id); if(el) el.style.display = "none"; }); if(e.target.value.length === 1 && index < inputs.length - 1) inputs[index+1].focus(); }); input.addEventListener('keydown', (e) => { if(e.key === 'Backspace' && e.target.value === '' && index > 0) inputs[index-1].focus(); if (e.key === 'Enter' && index === inputs.length - 1) { e.preventDefault(); if (input.classList.contains('add-device-input')) submitAddDevice(); if (input.classList.contains('pin-input')) submitSetPin(); if (input.classList.contains('login-pin-input')) submitLogin(); if (input.classList.contains('admin-pin-input')) submitAdminLogin(); } }); input.addEventListener('paste', (e) => { let paste = (e.clipboardData || window.clipboardData).getData('text').trim(); if(paste.length === 4 && /^\d+$/.test(paste)) { e.preventDefault(); inputs.forEach((inp, i) => inp.value = paste[i]); inputs[3].focus(); } }); }); }); if(document.getElementById("login-username")) document.getElementById("login-username").addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); document.getElementById("login-digit-1").focus(); }}); if(document.getElementById("admin-username")) document.getElementById("admin-username").addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); document.getElementById("admin-digit-1").focus(); }}); if(document.getElementById("custom-shortcut-name")) document.getElementById("custom-shortcut-name").addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); runCustomPushcut(); }}); if(document.getElementById("pres-pw-input")) document.getElementById("pres-pw-input").addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); checkPresPw(); }}); }
+        function setScreen(screenId) { ["loading-screen", "register-screen", "main-screen", "connected-devices-screen"].forEach(id => { let el = document.getElementById(id); if (el) { el.classList.remove('active'); void el.offsetWidth; } }); let target = document.getElementById(screenId); if (!target) return; if (screenId === "main-screen") { document.getElementById("greeting-text").innerText = getGreeting(currentSessionName); document.getElementById("app-container").classList.add("wide-panel"); let untisBtn = document.getElementById("webuntis-btn"); if (untisBtn) untisBtn.style.display = (currentSessionName === "Marco M." || currentSessionName === "Admin") ? "flex" : "none"; document.getElementById("guest-pres-banner").style.display = "none"; } else { document.getElementById("app-container").classList.remove("wide-panel"); } target.classList.add('active'); if(screenId === "connected-devices-screen") loadConnectedDevices(); if(screenId === "register-screen") checkGuestPresentations(); }
+        function showSubScreen(subId) { ["unverified-main", "unverified-qr", "unverified-connected", "unverified-login"].forEach(id => { let el = document.getElementById(id); if (el) el.classList.remove('active'); }); let target = document.getElementById(subId); if (target) target.classList.add('active'); }
+        function openTaskcards() { navigator.clipboard.writeText("20252026").catch(e=>{}); window.open('https://kmz-rt.taskcards.app/#/board/6098d954-46bf-442b-a1bd-5c7499e167e0/view?token=98e32cdc-37c1-4c9f-8e42-f1efaedb5150', '_blank'); }
+
+        async function fetchWebUntis(btn) { let pState = startBtnProgress(btn, 6500, "Lade Untis..."); try { let base64Image = await triggerPushcutWait("getUntis", currentSessionName); stopBtnProgress(btn, pState); if (base64Image && base64Image.trim() !== "") { let cleanBase64 = base64Image.trim(); if (!cleanBase64.startsWith("data:image")) cleanBase64 = "data:image/png;base64," + cleanBase64; document.getElementById("untis-image-display").src = cleanBase64; document.getElementById("untis-modal-overlay").style.display = "flex"; } else showCustomAlert("Der Server hat ein leeres Bild zurückgeschickt.", "Untis Fehler"); } catch(e) { stopBtnProgress(btn, pState); showCustomAlert("Fehler beim Abrufen des Stundenplans vom Server.", "Verbindungsfehler"); } }
+        async function showHotspotPassword(btn) { let pState = startBtnProgress(btn, 3550, "Rufe ab..."); try { let pass = await triggerPushcutWait(scHotspotPass, "get"); stopBtnProgress(btn, pState); showCustomAlert(`Name: iPhone 17 Pro von Marco\nPasswort: ${pass.trim()}`, "WLAN Hotspot"); } catch(e) { stopBtnProgress(btn, pState); showCustomAlert("Fehler beim Abrufen des Passworts vom Server.", "Fehler"); } }
+        async function checkSchulden(btn) { const originalHTML = btn.innerHTML; btn.innerHTML = '<svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>Lade Daten...'; try { const res = await fetchWithTimeout("https://gist.githubusercontent.com/Kleinlauch/a49aca02ca6302e4de01bc0bb199d4f7/raw/command.txt?t=" + Date.now(), {}, 8000); if (!res.ok) throw new Error(); const lines = (await res.text()).split('\n'); let foundLine = lines.find(l => l.split(';').length >= 8 && l.split(';')[0].trim().toLowerCase() === currentSessionName.toLowerCase()); if (foundLine) { let p = foundLine.split(';').map(x => x.trim()); let typText = (p[4].toLowerCase() === "verliehen") ? "Geld von Marco M. ausgeliehen" : "Geld an Marco M. verliehen"; let text = `Benutzer: ${p[0]}\n--------------------------\nBetrag: ${p[3]||"0,00€"}\nVerliehen am: ${p[1]||"-"} - Um ${p[2]||"-"} Uhr.\nTyp: ${typText}\nKommentar: ${p[7]||"Kein Kommentar"}\nRückgabe bis: ${p[5]||"-"} - Um ${p[6]||"-"} Uhr.`; showCustomAlert(text, "Schulden Details"); } else showCustomAlert("Du hast aktuell keine offenen Schulden.", "Schulden"); } catch(e) { showCustomAlert("Fehler beim Abrufen der Schuldendaten.", "Verbindungsfehler"); } btn.innerHTML = originalHTML; }
+
+        async function performLiveCheck(deviceId) {
+            let fetchSuccess = false;
+            try {
+                const res = await fetchWithTimeout(deviceListUrl + "?t=" + new Date().getTime(), {}, 6000); if (!res.ok) throw new Error("Network"); fetchSuccess = true;
+                const lines = (await res.text()).split('\n'); let found = lines.map(l => l.split(';')).find(p => p.length >= 2 && p[0].trim() === deviceId);
+                
+                if (found) {
+                    currentSessionName = found[1].trim().replace("ext-", "");
+                    if(found.length >= 3) currentHotspotPerm = found[2].trim();
+                    if(found.length >= 4 && found[3].trim() !== "") { currentTheme = found[3].trim(); } else { currentTheme = "LG"; }
+                    applyTheme(currentTheme);
+
+                    localStorage.setItem("userName", currentSessionName); 
+                    if (!localStorage.getItem('bg_' + currentSessionName)) { syncBackgroundFromServer(currentSessionName); } else { applyUserBackground(currentSessionName); }
+                    
+                    enterMainScreen();
+                } else {
+                    localStorage.removeItem("userName"); currentSessionName = ""; applyUserBackground(null); applyTheme("LG");
+                    setScreen("register-screen"); showSubScreen("unverified-main");
+                }
+            } catch (error) {
+                if (!fetchSuccess && localStorage.getItem("userName")) { 
+                    currentSessionName = localStorage.getItem("userName"); 
+                    let savedTheme = localStorage.getItem("userTheme"); if(savedTheme) applyTheme(savedTheme);
+                    applyUserBackground(currentSessionName); 
+                    enterMainScreen();
+                } 
+                else { localStorage.removeItem("userName"); applyUserBackground(null); applyTheme("LG"); setScreen("register-screen"); showSubScreen("unverified-main"); }
+            }
+        }
+        async function manualCheck() { setScreen("loading-screen"); await performLiveCheck(localStorage.getItem("deviceID")); }
+
+        async function loadConnectedDevices() { const container = document.getElementById("devices-list-container"); container.innerHTML = '<div class="spinner"></div>'; try { const response = await fetchWithTimeout(deviceListUrl + "?t=" + Date.now()); const lines = (await response.text()).split('\n'); const myExtTag = "ext-" + currentSessionName; const myDeviceId = localStorage.getItem("deviceID"); let html = ""; lines.forEach(line => { let p = line.split(';'); if (p.length >= 2 && p[1].trim() === myExtTag) { let isCurrent = (p[0].trim() === myDeviceId); let lbl = isCurrent ? `<span style="display:flex; align-items:center;"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>${p[0].trim()} <span style="color:#10b981; font-size:0.7em; margin-left:12px; background:rgba(16,185,129,0.15); padding:4px 8px; border-radius:8px; border:1px solid rgba(16,185,129,0.3); font-family:-apple-system,sans-serif;">Dieses Gerät</span></span>` : `<span style="display:flex; align-items:center;"><svg class="svg-icon" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>${p[0].trim()}</span>`; html += `<div class="device-item anim-fade" ${isCurrent ? 'style="border-color: rgba(16, 185, 129, 0.4);"' : ''}><span style="font-family: monospace; font-size:1.15em; display:flex; align-items:center;">${lbl}</span><button class="btn btn-del" onclick="confirmDeleteDevice('${p[0].trim()}')"><svg style="width:16px; height:16px; margin:0; stroke-width:2px; vertical-align:middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button></div>`; } }); container.innerHTML = html || "<div class='info-box anim-fade' style='color:#9ca3af;'>Keine externen Geräte verbunden.</div>"; } catch(e) { container.innerHTML = "<div class='info-box error-box'>Fehler beim Laden.</div>"; } }
+        function openAddDeviceModal() { document.querySelectorAll('.add-device-input').forEach(i=>i.value=""); document.getElementById("add-device-error").style.display="none"; document.getElementById("add-device-modal-overlay").style.display="flex"; document.getElementById("digit-1").focus(); }
+        function closeAddDeviceModal() { document.getElementById("add-device-modal-overlay").style.display="none"; }
+        async function submitAddDevice() { const code = Array.from(document.querySelectorAll('.add-device-input')).map(i=>i.value).join(''); if(code.length !== 4){ document.getElementById("add-device-error").style.display="block"; return; } const btn = document.getElementById("btn-submit-device"); let pState = startBtnProgress(btn, 4280, "Verbinde..."); try { await triggerPushcut(scAddDevice, `A-${code};ext-${currentSessionName};1`); stopBtnProgress(btn, pState); closeAddDeviceModal(); setTimeout(() => loadConnectedDevices(), 2500); } catch(e){ stopBtnProgress(btn, pState); document.getElementById("add-device-error").innerText="Fehler."; document.getElementById("add-device-error").style.display="block"; } }
+        function openSetPinModal() { document.querySelectorAll('.pin-input').forEach(i=>i.value=""); document.getElementById("set-pin-error").style.display="none"; document.getElementById("set-pin-modal-overlay").style.display="flex"; document.getElementById("set-digit-1").focus(); }
+        function closeSetPinModal() { document.getElementById("set-pin-modal-overlay").style.display="none"; }
+        async function submitSetPin() { const code = Array.from(document.querySelectorAll('.pin-input')).map(i=>i.value).join(''); if(code.length !== 4 || code === "0000" || code === "1234"){ document.getElementById("set-pin-error").style.display="block"; return; } const btn = document.getElementById("btn-submit-pin"); let pState = startBtnProgress(btn, 2000, "Speichere..."); try { let payload = `${localStorage.getItem("deviceID")};${currentSessionName};${currentHotspotPerm};${code}`; await triggerPushcut(scSetPin, payload); stopBtnProgress(btn, pState); closeSetPinModal(); showCustomAlert("PIN erfolgreich für den Offline-Login gespeichert.", "PIN Gespeichert"); } catch(e){ stopBtnProgress(btn, pState); document.getElementById("set-pin-error").innerText="Fehler."; document.getElementById("set-pin-error").style.display="block"; } }
+        
+        async function submitLogin() { 
+            const user = document.getElementById("login-username").value.trim(); 
+            const pin = Array.from(document.querySelectorAll('.login-pin-input')).map(i=>i.value).join(''); 
+            if(!user || pin.length !== 4){ document.getElementById("login-error").innerText="Bitte Benutzername und PIN eingeben."; document.getElementById("login-error").style.display="block"; return; } 
+            
+            const btn = document.getElementById("btn-submit-login"); 
+            let pState = startBtnProgress(btn, 4550, "Prüfe Login..."); 
+            
+            try { 
+                let response = await triggerPushcutWait(scLogin, `${localStorage.getItem("deviceID")};${user};${pin}`); 
+                stopBtnProgress(btn, pState); 
+                
+                if (response.includes("correct")) { 
+                    const og = btn.innerHTML; 
+                    btn.innerHTML = '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>Erfolgreich!'; 
+                    btn.style.background = "#10b981"; 
+                    
+                    setTimeout(async () => { 
+                        currentSessionName = user; 
+                        localStorage.setItem("userName", currentSessionName); 
+                        if (!localStorage.getItem('bg_' + currentSessionName)) { syncBackgroundFromServer(currentSessionName); } else { applyUserBackground(currentSessionName); } 
+                        
+                        await syncUserThemeOnLogin();
+                        
+                        enterMainScreen();
+                        
+                        btn.style.background = ""; 
+                        btn.innerHTML = og; 
+                        btn.disabled = false; 
+                        document.querySelectorAll('.login-pin-input').forEach(i=>i.value=""); 
+                        document.getElementById("login-username").value=""; 
+                    }, 500); 
+                } else { 
+                    throw new Error("Wrong PIN"); 
+                } 
+            } catch(e) { 
+                stopBtnProgress(btn, pState); 
+                document.getElementById("login-error").innerText="PIN oder Benutzername falsch."; 
+                document.getElementById("login-error").style.display="block"; 
+            } 
+        }
+
+        function confirmDeleteDevice(id) { currentDeviceToDelete = id; document.getElementById("delete-target-id").innerText = id; document.getElementById("delete-device-modal-overlay").style.display = "flex"; setTimeout(() => document.getElementById("btn-confirm-delete").focus(), 100); }
+        function closeDeleteDeviceModal() { document.getElementById("delete-device-modal-overlay").style.display = "none"; currentDeviceToDelete = null; }
+        async function executeDeleteDevice() { if (!currentDeviceToDelete) return; const btn = document.getElementById("btn-confirm-delete"); let pState = startBtnProgress(btn, 3000, "Trennen..."); try { await triggerPushcut(scDelDevice, `${currentDeviceToDelete};ext-${currentSessionName};1`); stopBtnProgress(btn, pState); closeDeleteDeviceModal(); if (currentDeviceToDelete === localStorage.getItem("deviceID")) { localStorage.removeItem("userName"); currentSessionName = ""; applyUserBackground(null); applyTheme("LG"); let newDeviceId = "A-" + Math.floor(1000 + Math.random() * 9000); localStorage.setItem("deviceID", newDeviceId); document.getElementById("device-id-display").innerText = newDeviceId; document.getElementById("own-device-id-display").innerText = newDeviceId; const onlyDigits = newDeviceId.substring(2); let boxesHtml = ""; for (let char of onlyDigits) { boxesHtml += `<div class="digit-box">${char}</div>`; } document.getElementById("digit-display-container").innerHTML = boxesHtml; const shortcutLink = "shortcuts://run-shortcut?name=KLF Register&input=" + newDeviceId; document.getElementById("qr-image").src = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&color=000000&bgcolor=ffffff&data=" + encodeURIComponent(shortcutLink); setScreen("register-screen"); showSubScreen("unverified-main"); showCustomAlert("Du hast dieses Gerät getrennt. Die Verbindung wurde unwiderruflich aufgelöst und du wurdest abgemeldet.", "Sitzung beendet"); } else setTimeout(() => loadConnectedDevices(), 2500); } catch(e) { stopBtnProgress(btn, pState); showCustomAlert("Fehler beim Senden des Lösch-Befehls.", "Verbindungsfehler"); } }
+        function setHotspotBtnsState(htmlContent, disabled) { document.querySelectorAll('.hotspot-request-btn').forEach(btn => { btn.innerHTML = htmlContent; btn.disabled = disabled; if (!disabled) { btn.style.background = ""; btn.style.animation = ""; }}); }
+        async function checkHotspotPermission() { setHotspotBtnsState("Prüfe Rechte...", true); if (currentSessionName === "Admin") { document.getElementById("gps-modal-overlay").style.display = "flex"; setTimeout(() => document.querySelector('#gps-modal-overlay button.btn-pulse').focus(), 100); return; } try { let responseText = await fetchWithTimeout(deviceListUrl + "?t=" + Date.now(), {}, 8000).then(r=>r.text()); let p = responseText.split('\n').map(l=>l.split(';')).find(x => x.length >= 3 && x[0].trim() === localStorage.getItem("deviceID")); if (!p || p[2].trim() !== "1") { showCustomAlert("Zugriff verweigert.", "Fehlende Rechte"); setHotspotBtnsState('<svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>Hotspot anfragen', false); return; } document.getElementById("gps-modal-overlay").style.display = "flex"; setTimeout(() => document.querySelector('#gps-modal-overlay button.btn-pulse').focus(), 100); } catch (e) { showCustomAlert("Verbindungsfehler.", "Fehler"); setHotspotBtnsState('<svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>Hotspot anfragen', false); } }
+        function closeGpsModal() { document.getElementById("gps-modal-overlay").style.display = "none"; setHotspotBtnsState('<svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>Hotspot anfragen', false); }
+        function executeHotspot(wantGps) { document.getElementById("gps-modal-overlay").style.display = "none"; let myDeviceId = localStorage.getItem("deviceID"); let myName = currentSessionName; if (wantGps && navigator.geolocation) { setHotspotBtnsState("Hole Standort...", true); navigator.geolocation.getCurrentPosition( (pos) => sendHotspotPayload(`hotspot-anfrage;${myName};${myDeviceId};GPS;${pos.coords.latitude};${pos.coords.altitude||0};${pos.coords.longitude}`), (err) => { showCustomAlert("Standort blockiert. Anfrage gesendet.", "Hinweis"); sendHotspotPayload(`hotspot-anfrage;${myName};${myDeviceId}`); }, { enableHighAccuracy: true, timeout: 5000 } ); } else { setHotspotBtnsState("Sende Anfrage...", true); sendHotspotPayload(`hotspot-anfrage;${myName};${myDeviceId}`); } }
+        async function sendHotspotPayload(content) { setHotspotBtnsState("Sende...", true); try { await triggerPushcut(scHotspot, content); document.querySelectorAll('.hotspot-request-btn').forEach(btn => { btn.innerHTML = '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>Gesendet!'; btn.style.background = "#10b981"; }); setTimeout(() => setHotspotBtnsState('<svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>Hotspot anfragen', false), 3000); } catch (e) { showCustomAlert("Verbindungsfehler.", "Fehler"); setHotspotBtnsState('<svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>Hotspot anfragen', false); } }
+        function openAdminPanel() { if (isAdminUnlocked) { openAdminMenu(); } else { document.getElementById('admin-auth-modal').style.display='flex'; } }
+        function showAdminAuthSub(subId) { document.getElementById('admin-auth-selection').classList.remove('active'); document.getElementById('admin-auth-login').classList.remove('active'); document.getElementById('admin-auth-key').classList.remove('active'); document.getElementById(subId).classList.add('active'); document.querySelectorAll('.admin-pin-input').forEach(i=>i.value=""); document.getElementById("admin-username").value=""; document.getElementById("admin-login-error").style.display="none"; }
+        async function submitAdminLogin() { const userEingabe = document.getElementById("admin-username").value.trim(); const pinEingabe = Array.from(document.querySelectorAll('.admin-pin-input')).map(i=>i.value).join(''); if(!userEingabe || pinEingabe.length !== 4){ document.getElementById("admin-login-error").innerText="Bitte Benutzername und PIN eingeben."; document.getElementById("admin-login-error").style.display="block"; return; } const btn = document.getElementById("btn-admin-submit"); let pState = startBtnProgress(btn, 4890, "Prüfe Admin..."); try { let currentGerätUser = localStorage.getItem("userName") || "-"; let currentDeviceID = localStorage.getItem("deviceID") || "A-0000"; let payload = `${currentGerätUser};${currentDeviceID};${userEingabe};${pinEingabe}`; let response = await triggerPushcutWait("KLF-WEB-AdminLogin", payload); stopBtnProgress(btn, pState); if (response.trim().includes("correct")) { const og = btn.innerHTML; btn.innerHTML = '<svg class="svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>Erfolgreich!'; btn.style.background = "#10b981"; isAdminUnlocked = true; setTimeout(() => { document.getElementById('admin-auth-modal').style.display='none'; openAdminMenu(); btn.style.background = ""; btn.innerHTML = og; btn.disabled = false; showAdminAuthSub('admin-auth-selection'); }, 500); } else throw new Error("Wrong PIN"); } catch(e) { stopBtnProgress(btn, pState); document.getElementById("admin-login-error").innerText="Benutzername oder PIN falsch."; document.getElementById("admin-login-error").style.display="block"; } }
+        function formatKeyDate(d) { const pad = n => String(n).padStart(2, '0'); return `${pad(d.getDate())}.${pad(d.getMonth()+1)}.${String(d.getFullYear()).slice(-2)}, ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`; }
+        async function requestIphoneKey() { const btnArea = document.getElementById("iphone-key-area"); const btn = document.getElementById("btn-req-key"); let deviceId = localStorage.getItem("deviceID") || "A-0000"; let currentUser = localStorage.getItem("userName") || "-"; currentIphoneKey = `${formatKeyDate(new Date())};${deviceId}/${currentUser};klf-web-admin;KLF WEB Admin Zugang`; let pushcutPayload = currentIphoneKey + ";wait"; let pState = startBtnProgress(btn, 4460, "Sende Anfrage..."); try { let res = await triggerPushcutWait("KLF-WEB-Admin", pushcutPayload); stopBtnProgress(btn, pState); if(res.trim().includes("ok") || res.trim() !== "") { btnArea.innerHTML = `<div class="info-box anim-pop" style="color:#10b981; border-color:#10b981; font-weight:bold;">iPhone Key ist bereit</div><button class="btn anim-pop" style="background:#10b981; box-shadow: 0 10px 25px rgba(16,185,129,0.4);" onclick="checkIphoneKey()"><svg class="svg-icon" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>Key Aktualisieren</button>`; } else throw new Error(); } catch(e) { stopBtnProgress(btn, pState); btnArea.innerHTML = `<p style="color:#fca5a5; font-weight:bold;">Fehler beim Senden.</p><button id="btn-req-key" class="btn btn-pulse" onclick="requestIphoneKey()">Erneut anfragen</button>`; } }
+        async function checkIphoneKey() { try { const res = (await fetchWithTimeout(adminReadUrl + "?t=" + Date.now(), {}, 8000).then(r=>r.text())).trim(); if (res === `${currentIphoneKey};allow`) { isAdminUnlocked = true; document.getElementById('admin-auth-modal').style.display='none'; openAdminMenu(); } else if (res.includes("deny")) showCustomAlert("Zugriff vom Master-Gerät abgelehnt.", "Abgelehnt"); else showCustomAlert("Noch keine Freigabe in der Datei gefunden. Versuche es gleich nochmal.", "Warten..."); } catch(e) { showCustomAlert("Fehler beim Abrufen der Key-Datei.", "Verbindungsfehler"); } }
+        function openAdminMenu() { document.getElementById('admin-menu-modal').style.display='flex'; }
+        function hideAdminMenu() { document.getElementById('admin-menu-modal').style.display='none'; }
+        function lockAdminMenu() { isAdminUnlocked = false; currentIphoneKey = ""; document.getElementById('admin-menu-modal').style.display='none'; showAdminAuthSub('admin-auth-selection'); document.getElementById("iphone-key-area").innerHTML = `<button id="btn-req-key" class="btn btn-pulse" onclick="requestIphoneKey()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>Key anfragen</button>`; showCustomAlert("Admin-Modus wurde erfolgreich beendet und gesperrt.", "System gesperrt"); }
+        function runCustomPushcut() { let input = document.getElementById("custom-shortcut-name").value.trim(); if(!input) return; let parsedName = encodeURIComponent(input).replace(/%20/g, "%20"); triggerSimplePushcut(input); document.getElementById("custom-shortcut-name").value = ""; }
+    </script>
+</body>
+</html>
