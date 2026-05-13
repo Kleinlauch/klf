@@ -924,7 +924,34 @@
 
         async function fetchWebUntis(btn) { let pState = startBtnProgress(btn, 6500, "Lade Untis..."); try { let base64Image = await triggerPushcutWait("getUntis", currentSessionName); stopBtnProgress(btn, pState); if (base64Image && base64Image.trim() !== "") { let cleanBase64 = base64Image.trim(); if (!cleanBase64.startsWith("data:image")) cleanBase64 = "data:image/png;base64," + cleanBase64; document.getElementById("untis-image-display").src = cleanBase64; document.getElementById("untis-modal-overlay").style.display = "flex"; } else showCustomAlert("Der Server hat ein leeres Bild zurückgeschickt.", "Untis Fehler"); } catch(e) { stopBtnProgress(btn, pState); showCustomAlert("Fehler beim Abrufen des Stundenplans vom Server.", "Verbindungsfehler"); } }
         async function showHotspotPassword(btn) { let pState = startBtnProgress(btn, 3550, "Rufe ab..."); try { let pass = await triggerPushcutWait(scHotspotPass, "get"); stopBtnProgress(btn, pState); showCustomAlert(`Name: iPhone 17 Pro von Marco\nPasswort: ${pass.trim()}`, "WLAN Hotspot"); } catch(e) { stopBtnProgress(btn, pState); showCustomAlert("Fehler beim Abrufen des Passworts vom Server.", "Fehler"); } }
-        async function checkSchulden(btn) { const originalHTML = btn.innerHTML; btn.innerHTML = '<svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>Lade Daten...'; try { const res = await fetchWithTimeout("https://gist.githubusercontent.com/Kleinlauch/a49aca02ca6302e4de01bc0bb199d4f7/raw/command.txt?t=" + Date.now(), {}, 8000); if (!res.ok) throw new Error(); const lines = (await res.text()).split('\n'); let foundLine = lines.find(l => l.split(';').length >= 8 && l.split(';')[0].trim().toLowerCase() === currentSessionName.toLowerCase()); if (foundLine) { let p = foundLine.split(';').map(x => x.trim()); let typText = (p[4].toLowerCase() === "verliehen") ? "Geld von Marco M. ausgeliehen" : "Geld an Marco M. verliehen"; let text = `Benutzer: ${p[0]}\n--------------------------\nBetrag: ${p[3]||"0,00€"}\nVerliehen am: ${p[1]||"-"} - Um ${p[2]||"-"} Uhr.\nTyp: ${typText}\nKommentar: ${p[7]||"Kein Kommentar"}\nRückgabe bis: ${p[5]||"-"} - Um ${p[6]||"-"} Uhr.`; showCustomAlert(text, "Schulden Details"); } else showCustomAlert("Du hast aktuell keine offenen Schulden.", "Schulden"); } catch(e) { showCustomAlert("Fehler beim Abrufen der Schuldendaten.", "Verbindungsfehler"); } btn.innerHTML = originalHTML; }
+async function checkSchulden(btn) { 
+    // Ursprüngliches Design des Buttons speichern & Lade-Animation setzen
+    const originalHTML = btn.innerHTML; 
+    btn.innerHTML = '<svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="2"></circle><path d="M6 12h.01M18 12h.01"></path></svg>Lade Daten...'; 
+    
+    try { 
+        // URL mit dem dynamischen Benutzernamen aufbauen
+        const targetUrl = `https://api.pushcut.io/loPBXSU7lmRjUzDvwnMUm/execute?shortcut=getSchulden&input=${encodeURIComponent(currentSessionName)}`;
+        
+        // Fetch Request an Pushcut senden (mit 8 Sekunden Timeout)
+        const res = await fetchWithTimeout(targetUrl, { method: 'GET' }, 8000); 
+        
+        if (!res.ok) throw new Error("Server antwortet nicht korrekt."); 
+        
+        // Die unformatierte Antwort des Servers auslesen
+        const serverText = await res.text(); 
+        
+        // Das Ergebnis im Fancy-Popup anzeigen
+        showCustomAlert(serverText.trim(), "Schulden Details"); 
+        
+    } catch(e) { 
+        // Falls der Server down ist oder das Timeout greift
+        showCustomAlert("Fehler beim Abrufen der Schuldendaten vom Server.", "Verbindungsfehler"); 
+    } 
+    
+    // Button wieder in den Originalzustand versetzen
+    btn.innerHTML = originalHTML; 
+}
 
         async function performLiveCheck(deviceId) {
             let fetchSuccess = false;
