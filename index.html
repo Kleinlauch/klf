@@ -140,6 +140,35 @@
         #amg-skip-text { position: absolute; bottom: 30px; font-size: 0.8em; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0, 150, 255, 0.5); opacity: 0; animation: amgFadeIn 0.8s 1.2s forwards; text-align: center; width: 100%; font-weight: 600; padding: 0 20px; box-sizing: border-box; }
         @keyframes amgFadeIn { to { opacity: 1; } }
 
+        /* --- SCHULDEN WIDGET (LIQUID GLASS) --- */
+        .debt-widget { display: none; margin: 10px auto 30px auto; padding: 25px 20px; text-align: center; cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.2), box-shadow 0.4s ease, border-color 0.4s ease; border-radius: 24px; position: relative; overflow: hidden; }
+        .debt-widget:hover { transform: translateY(-5px) scale(1.02); }
+        .debt-widget:active { transform: scale(0.95); }
+        
+        .debt-widget-header { font-size: 0.8em; text-transform: uppercase; letter-spacing: 3px; font-weight: 800; color: rgba(255,255,255,0.6); margin-bottom: 5px; }
+        .debt-widget-amount { font-size: 3.2em; font-weight: 900; text-shadow: 0 5px 20px rgba(0,0,0,0.5); margin: 0; color: #fff; letter-spacing: -1px; }
+        .debt-widget-sub { font-size: 1em; font-weight: 600; color: rgba(255,255,255,0.9); margin-top: 10px; }
+        .debt-widget-comment { font-size: 0.85em; color: rgba(255,255,255,0.5); font-style: italic; margin-top: 8px; display: block; }
+
+        /* Animationen für die Fälligkeit */
+        @keyframes glow-orange-slow { 
+            0%, 100% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.1), inset 0 0 10px rgba(245, 158, 11, 0.05); border-color: rgba(245, 158, 11, 0.2); } 
+            50% { box-shadow: 0 0 35px rgba(245, 158, 11, 0.6), inset 0 0 20px rgba(245, 158, 11, 0.2); border-color: rgba(245, 158, 11, 0.8); } 
+        }
+        @keyframes glow-orange-fast { 
+            0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.2), inset 0 0 15px rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.4); } 
+            50% { box-shadow: 0 0 50px rgba(245, 158, 11, 0.9), inset 0 0 30px rgba(245, 158, 11, 0.4); border-color: rgba(245, 158, 11, 1); } 
+        }
+        @keyframes glow-red-fast { 
+            0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3), inset 0 0 15px rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); } 
+            50% { box-shadow: 0 0 50px rgba(239, 68, 68, 0.95), inset 0 0 30px rgba(239, 68, 68, 0.4); border-color: rgba(239, 68, 68, 1); } 
+        }
+
+        .status-normal { /* Standard Liquid Glass, keine extra Animation */ }
+        .status-tomorrow { animation: glow-orange-slow 3s infinite; }
+        .status-today { animation: glow-orange-fast 1.2s infinite; }
+        .status-overdue { animation: glow-red-fast 0.8s infinite; }
+        .status-overdue .debt-widget-header, .status-overdue .debt-widget-amount { color: #fca5a5; }
         /* --- SERVER BANNER --- */
         #server-info-banner { 
             position: fixed; top: 20px; left: 20px; right: 20px; 
@@ -579,6 +608,13 @@
             <p id="greeting-text"></p>
             <img id="amg-ui-logo" src="https://i.ibb.co/HLj6hr8K/20500556-amg-marke-logo-symbol-weiss-mit-name-design-deutsche-autos-automobil-illustration-mit-schwa.png" alt="AMG">
             
+            <div id="debt-widget" class="liquid-panel anim-pop" onclick="checkSchuldenWidget()">
+                <div class="debt-widget-header" id="debt-widget-header">Offene Schuld</div>
+                <div class="debt-widget-amount" id="debt-widget-amount">0,00€</div>
+                <div class="debt-widget-sub" id="debt-widget-sub">Datum</div>
+                <span class="debt-widget-comment" id="debt-widget-comment"></span>
+            </div>
+
             <div class="menu-grid">
                 <div class="menu-col">
                     <div class="category-title">System & Bildung</div>
@@ -809,10 +845,11 @@
             }, 2500); // Bleibt 2,5 Sekunden sichtbar
         }
 
-        function enterMainScreen() {
+       function enterMainScreen() {
             setScreen("main-screen");
+            loadDebtWidget(); // <-- NEU: Lädt das Widget beim Starten
             if (currentTheme === "AMG" && !hasPlayedAmgIntro) {
-                playAmgIntro(); // Banner trigger runs when skipAmgIntro() runs at end of timeout
+                playAmgIntro(); 
             } else {
                 setTimeout(showServerBanner, 500);
             }
@@ -1057,6 +1094,120 @@ async function checkSchulden(btn) {
         function hideAdminMenu() { document.getElementById('admin-menu-modal').style.display='none'; }
         function lockAdminMenu() { isAdminUnlocked = false; currentIphoneKey = ""; document.getElementById('admin-menu-modal').style.display='none'; showAdminAuthSub('admin-auth-selection'); document.getElementById("iphone-key-area").innerHTML = `<button id="btn-req-key" class="btn btn-pulse" onclick="requestIphoneKey()"><svg class="svg-icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>Key anfragen</button>`; showCustomAlert("Admin-Modus wurde erfolgreich beendet und gesperrt.", "System gesperrt"); }
         function runCustomPushcut() { let input = document.getElementById("custom-shortcut-name").value.trim(); if(!input) return; let parsedName = encodeURIComponent(input).replace(/%20/g, "%20"); triggerSimplePushcut(input); document.getElementById("custom-shortcut-name").value = ""; }
+    
+        // ==========================================
+        // --- SCHULDEN WIDGET LOGIK ---
+        // ==========================================
+        
+        // Dynamischer Link (ohne Commit-Hash, lädt immer die neuste Version)
+        const debtListUrl = "https://gist.githubusercontent.com/Kleinlauch/a49aca02ca6302e4de01bc0bb199d4f7/raw/command.txt";
+
+        function parseDebtDate(dateStr, timeStr) {
+            let [d, m, y] = dateStr.split('.');
+            // Fallback: Falls du aus Versehen 06.07 statt 06:07 einträgst, wird das hier abgefangen
+            let [hr, min] = timeStr.replace('.', ':').split(':');
+            return new Date(y, m - 1, d, hr, min);
+        }
+
+        async function loadDebtWidget() {
+            const widget = document.getElementById('debt-widget');
+            widget.style.display = 'none'; // Verstecken bis geladen
+            if (!currentSessionName) return;
+
+            try {
+                // Lade das Gist
+                const res = await fetchWithTimeout(debtListUrl + "?t=" + Date.now(), {}, 8000);
+                if (!res.ok) return;
+                const text = await res.text();
+                const lines = text.split('\n');
+
+                // Finde den angemeldeten User
+                let userLine = lines.find(l => l.startsWith(currentSessionName + ":"));
+                if (!userLine) return;
+
+                // Extrahiere den Teil nach dem Doppelpunkt
+                let dataStr = userLine.substring(userLine.indexOf(':') + 1).trim();
+                if (!dataStr) return; 
+
+                let p = dataStr.split(';');
+                if (p.length < 7) return; 
+                if (p[4].trim() !== "verliehen") return; // Nur ausführen, wenn Status "verliehen" ist
+
+                let amount = p[3].trim();
+                let dueDateStr = p[5].trim();
+                let dueTimeStr = p[6].trim();
+                let comment = p[7] ? p[7].trim() : "";
+
+                let dueDate = parseDebtDate(dueDateStr, dueTimeStr);
+                let now = new Date();
+
+                // Nur die reinen Tage vergleichen
+                let today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                let dueDay = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDate());
+                let diffDays = Math.ceil((dueDay - today) / (1000 * 60 * 60 * 24));
+
+                let isOverdue = now > dueDate;
+
+                // Standard-Werte
+                let headerText = "Offene Schuld";
+                let statusClass = "status-normal";
+                let subText = `Rückzahlung bis ${dueDateStr}, ${dueTimeStr} Uhr`;
+
+                // Logik für die Eskalationsstufen
+                if (isOverdue) {
+                    let overdueDays = Math.floor((now - dueDate) / (1000 * 60 * 60 * 24));
+                    statusClass = "status-overdue"; // Rot & Schnell
+                    if (overdueDays === 0) {
+                        headerText = `Fällig seit Heute, ${dueTimeStr} Uhr`;
+                    } else {
+                        headerText = `Fällig seit ${overdueDays} Tage(n)`;
+                    }
+                    subText = `Hätte bezahlt werden müssen am ${dueDateStr}`;
+                } else if (diffDays === 0) {
+                    statusClass = "status-today"; // Orange & Schnell
+                    subText = `Rückzahlung Heute, ${dueTimeStr} Uhr`;
+                } else if (diffDays === 1) {
+                    statusClass = "status-tomorrow"; // Orange & Langsam
+                    subText = `Rückzahlung Morgen, ${dueTimeStr} Uhr`;
+                }
+
+                // Ins HTML einsetzen
+                document.getElementById('debt-widget-amount').innerText = amount;
+                document.getElementById('debt-widget-header').innerText = headerText;
+                document.getElementById('debt-widget-sub').innerText = subText;
+                document.getElementById('debt-widget-comment').innerText = comment ? `"${comment}"` : "";
+
+                // CSS Klasse zuweisen (Liquid Panel + die entsprechende Blink-Animation)
+                widget.className = "liquid-panel debt-widget anim-pop " + statusClass;
+                widget.style.display = 'block';
+
+            } catch (e) {
+                console.warn("Konnte Schulden-Widget nicht laden.", e);
+            }
+        }
+
+        // Wird ausgeführt, wenn man auf das Widget tippt
+        async function checkSchuldenWidget() {
+            const widget = document.getElementById('debt-widget');
+            const ogHtml = widget.innerHTML;
+            
+            // Cooler Lade-Spinner direkt im Widget
+            widget.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100px;"><div class="spinner" style="margin:0;"></div></div>';
+
+            try {
+                const targetUrl = `https://api.pushcut.io/loPBXSU7lmRjUzDvwnMUm/execute?shortcut=getSchulden&input=${encodeURIComponent(currentSessionName)}`;
+                const res = await fetchWithTimeout(targetUrl, { method: 'GET' }, 8000);
+                if (!res.ok) throw new Error("Server antwortet nicht");
+                
+                const serverText = await res.text();
+                showCustomAlert(serverText.trim(), "Schulden Details");
+            } catch(e) {
+                showCustomAlert("Fehler beim Abrufen der Schuldendaten vom Server.", "Verbindungsfehler");
+            }
+            // Danach das Widget wiederherstellen
+            widget.innerHTML = ogHtml;
+        }
+
     </script>
 </body>
 </html>
